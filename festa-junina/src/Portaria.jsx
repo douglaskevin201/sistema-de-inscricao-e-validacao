@@ -1,0 +1,74 @@
+import { useState } from 'react'
+import { supabase } from './supabase'
+
+export default function Portaria() {
+  const [codigo, setCodigo] = useState('')
+  const [resultado, setResultado] = useState(null)
+  const [carregando, setCarregando] = useState(false)
+
+  async function validar() {
+    if (!codigo.trim()) return
+    setCarregando(true)
+    setResultado(null)
+
+    const { data, error } = await supabase
+      .from('convites')
+      .select('*')
+      .eq('codigo', codigo.trim().toUpperCase())
+      .single()
+
+    if (error || !data) {
+      setResultado({ status: 'invalido' })
+    } else if (data.usado_em) {
+      setResultado({ status: 'ja_usado', nome: data.nome, tipo: data.tipo, usado_em: new Date(data.usado_em).toLocaleString('pt-BR') })
+    } else {
+      await supabase.from('convites').update({ usado_em: new Date() }).eq('codigo', codigo.trim().toUpperCase())
+      setResultado({ status: 'ok', nome: data.nome, tipo: data.tipo, convidado_de: data.convidado_de })
+    }
+
+    setCodigo('')
+    setCarregando(false)
+  }
+
+  const cores = {
+    ok:       { bg:'#d1fae5', cor:'#065f46', borda:'#10b981', icone:'✅', msg:'ENTRADA LIBERADA' },
+    ja_usado: { bg:'#fef3c7', cor:'#92400e', borda:'#f59e0b', icone:'⚠️', msg:'CONVITE JÁ UTILIZADO' },
+    invalido: { bg:'#fee2e2', cor:'#991b1b', borda:'#ef4444', icone:'❌', msg:'CONVITE INVÁLIDO' }
+  }
+
+  return (
+    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+      <div style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:400,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
+        <h2 style={{color:'#92400e',marginBottom:4}}>🎪 Portaria</h2>
+        <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Festa Junina UniEnsino 2025</p>
+
+        <input
+          value={codigo}
+          onChange={e => setCodigo(e.target.value.toUpperCase())}
+          onKeyDown={e => e.key === 'Enter' && validar()}
+          placeholder="CÓDIGO DO CONVITE"
+          style={{width:'100%',padding:14,fontSize:22,border:'2px solid #d97706',borderRadius:8,textAlign:'center',letterSpacing:4,fontWeight:'bold',marginBottom:12}}
+          autoFocus
+        />
+
+        <button onClick={validar} disabled={carregando}
+          style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer'}}>
+          {carregando ? 'Verificando...' : '✅ Validar Convite'}
+        </button>
+
+        {resultado && (() => {
+          const c = cores[resultado.status]
+          return (
+            <div style={{marginTop:20,padding:20,borderRadius:10,background:c.bg,border:`2px solid ${c.borda}`,color:c.cor}}>
+              <div style={{fontSize:36}}>{c.icone}</div>
+              <div style={{fontSize:20,fontWeight:'bold',marginTop:4}}>{c.msg}</div>
+              {resultado.nome && <div style={{fontSize:16,fontWeight:'bold',marginTop:6}}>{resultado.nome}</div>}
+              {resultado.tipo === 'convidado' && <div style={{fontSize:13,marginTop:2}}>Convidado de {resultado.convidado_de}</div>}
+              {resultado.usado_em && <div style={{fontSize:12,marginTop:4}}>Usado em: {resultado.usado_em}</div>}
+            </div>
+          )
+        })()}
+      </div>
+    </div>
+  )
+}
