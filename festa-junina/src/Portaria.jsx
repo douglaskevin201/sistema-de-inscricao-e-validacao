@@ -6,26 +6,22 @@ export default function Portaria() {
   const [resultado, setResultado] = useState(null)
   const [carregando, setCarregando] = useState(false)
 
-  async function validar() {
-    if (!codigo.trim()) return
+  async function validarCodigo(cod) {
+    if (!cod.trim()) return
     setCarregando(true)
     setResultado(null)
-
     const { data, error } = await supabase
-      .from('convites')
-      .select('*')
-      .eq('codigo', codigo.trim().toUpperCase())
-      .single()
+      .from('convites').select('*')
+      .eq('codigo', cod.trim().toUpperCase()).single()
 
     if (error || !data) {
       setResultado({ status: 'invalido' })
     } else if (data.usado_em) {
       setResultado({ status: 'ja_usado', nome: data.nome, tipo: data.tipo, usado_em: new Date(data.usado_em).toLocaleString('pt-BR') })
     } else {
-      await supabase.from('convites').update({ usado_em: new Date() }).eq('codigo', codigo.trim().toUpperCase())
+      await supabase.from('convites').update({ usado_em: new Date() }).eq('codigo', cod.trim().toUpperCase())
       setResultado({ status: 'ok', nome: data.nome, tipo: data.tipo, convidado_de: data.convidado_de })
     }
-
     setCodigo('')
     setCarregando(false)
   }
@@ -37,22 +33,19 @@ export default function Portaria() {
   }
 
   return (
-    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
-      <div style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:400,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
+    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:'#fff8e1'}}>
+      <div style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:420,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
         <h2 style={{color:'#92400e',marginBottom:4}}>🎪 Portaria</h2>
         <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Festa Junina UniEnsino 2025</p>
 
-        <input
-          value={codigo}
+        <input value={codigo}
           onChange={e => setCodigo(e.target.value.toUpperCase())}
-          onKeyDown={e => e.key === 'Enter' && validar()}
+          onKeyDown={e => e.key === 'Enter' && validarCodigo(codigo)}
           placeholder="CÓDIGO DO CONVITE"
-          style={{width:'100%',padding:14,fontSize:22,border:'2px solid #d97706',borderRadius:8,textAlign:'center',letterSpacing:4,fontWeight:'bold',marginBottom:12}}
-          autoFocus
-        />
+          style={{width:'100%',padding:14,fontSize:22,border:'2px solid #d97706',borderRadius:8,textAlign:'center',letterSpacing:4,fontWeight:'bold',marginBottom:12,boxSizing:'border-box'}} />
 
-        <button onClick={validar} disabled={carregando}
-          style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer'}}>
+        <button onClick={() => validarCodigo(codigo)} disabled={carregando}
+          style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer',marginBottom:12}}>
           {carregando ? 'Verificando...' : '✅ Validar Convite'}
         </button>
 
@@ -60,10 +53,11 @@ export default function Portaria() {
           const c = cores[resultado.status]
           return (
             <div style={{marginTop:20,padding:20,borderRadius:10,background:c.bg,border:`2px solid ${c.borda}`,color:c.cor}}>
-              <div style={{fontSize:36}}>{c.icone}</div>
+              <div style={{fontSize:40}}>{c.icone}</div>
               <div style={{fontSize:20,fontWeight:'bold',marginTop:4}}>{c.msg}</div>
               {resultado.nome && <div style={{fontSize:16,fontWeight:'bold',marginTop:6}}>{resultado.nome}</div>}
               {resultado.tipo === 'convidado' && <div style={{fontSize:13,marginTop:2}}>Convidado de {resultado.convidado_de}</div>}
+              {resultado.tipo === 'aluno' && <div style={{fontSize:13,marginTop:2}}>🎓 Aluno</div>}
               {resultado.usado_em && <div style={{fontSize:12,marginTop:4}}>Usado em: {resultado.usado_em}</div>}
             </div>
           )
