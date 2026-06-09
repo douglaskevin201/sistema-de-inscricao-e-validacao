@@ -37,39 +37,45 @@ export default function Formulario() {
     setConvidados(convidados.filter((_, idx) => idx !== i))
   }
 
-  async function enviar() {
-    if (!form.nome || !form.email || !form.cpf || !form.curso) {
-      setErro('Preencha todos os campos obrigatórios.')
-      return
-    }
-    setErro('')
-    setEnviando(true)
-    try {
-      const codigoAluno = gerarCodigo()
-      const { error } = await supabase.from('convites').insert({
-        codigo: codigoAluno, nome: form.nome, email: form.email,
-        cpf: form.cpf, curso: form.curso, tipo: 'aluno', convidado_de: null
-      })
-      if (error) throw error
-      await enviarEmail(form.email, form.nome, codigoAluno, 'aluno', form.nome)
-
-      for (const c of convidados) {
-        if (c.nome && c.email) {
-          const codigoConv = gerarCodigo()
-          await supabase.from('convites').insert({
-            codigo: codigoConv, nome: c.nome, email: c.email,
-            cpf: null, curso: null, tipo: 'convidado', convidado_de: form.nome
-          })
-          await enviarEmail(c.email, c.nome, codigoConv, 'convidado', form.nome)
-        }
-      }
-      setSucesso(true)
-    } catch (e) {
-      setErro('Erro ao enviar. Tente novamente.')
-      console.error(e)
-    }
-    setEnviando(false)
+async function enviar() {
+  if (!form.nome || !form.email || !form.cpf || !form.curso) {
+    setErro('Preencha todos os campos obrigatórios.')
+    return
   }
+  setErro('')
+  setEnviando(true)
+  try {
+    const codigoAluno = gerarCodigo()
+    const { error } = await supabase.from('convites').insert({
+      codigo: codigoAluno, nome: form.nome, email: form.email,
+      cpf: form.cpf, curso: form.curso, tipo: 'aluno', convidado_de: null
+    })
+    if (error) throw error
+    await enviarEmail(form.email, form.nome, codigoAluno, 'aluno', form.nome)
+
+    const convidadosValidos = convidados.filter(c => c.nome.trim() && c.email.trim() && c.email.includes('@'))
+    
+    for (let i = 0; i < convidadosValidos.length; i++) {
+      const c = convidadosValidos[i]
+      const codigoConv = gerarCodigo()
+      const { error: errConv } = await supabase.from('convites').insert({
+        codigo: codigoConv, nome: c.nome.trim(), email: c.email.trim(),
+        cpf: null, curso: null, tipo: 'convidado', convidado_de: form.nome
+      })
+      if (errConv) {
+        console.error('Erro ao salvar convidado:', errConv)
+        continue
+      }
+      await enviarEmail(c.email.trim(), c.nome.trim(), codigoConv, 'convidado', form.nome)
+    }
+
+    setSucesso(true)
+  } catch (e) {
+    setErro('Erro ao enviar. Tente novamente.')
+    console.error(e)
+  }
+  setEnviando(false)
+}
 
   if (sucesso) return (
     <div style={styles.container}>
