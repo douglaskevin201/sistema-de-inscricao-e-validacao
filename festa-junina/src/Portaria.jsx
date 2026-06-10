@@ -1,32 +1,93 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { Html5Qrcode } from 'html5-qrcode'
 import { supabase } from './supabase'
 
 export default function Portaria() {
   const [codigo, setCodigo] = useState('')
   const [resultado, setResultado] = useState(null)
   const [carregando, setCarregando] = useState(false)
+  const [scannerAtivo, setScannerAtivo] = useState(false)
+  const [scannerErro, setScannerErro] = useState('')
+  const html5QrcodeRef = useRef(null)
+  const timeoutRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      stopScanner()
+    }
+  }, [])
 
   async function validarCodigo(cod) {
-    if (!cod.trim()) return
+    const codigoFinal = cod.trim().toUpperCase()
+    if (!codigoFinal) return
     setCarregando(true)
     setResultado(null)
     const { data, error } = await supabase
       .from('convites').select('*')
-      .eq('codigo', cod.trim().toUpperCase()).single()
+      .eq('codigo', codigoFinal).single()
 
     if (error || !data) {
       setResultado({ status: 'invalido' })
     } else if (data.usado_em) {
       setResultado({ status: 'ja_usado', nome: data.nome, tipo: data.tipo, usado_em: new Date(data.usado_em).toLocaleString('pt-BR') })
     } else {
-      await supabase.from('convites').update({ usado_em: new Date() }).eq('codigo', cod.trim().toUpperCase())
+      await supabase.from('convites').update({ usado_em: new Date() }).eq('codigo', codigoFinal)
       setResultado({ status: 'ok', nome: data.nome, tipo: data.tipo, convidado_de: data.convidado_de })
     }
     setCodigo('')
     setCarregando(false)
 
-    // Limpa resultado após 6 segundos
-    setTimeout(() => setResultado(null), 6000)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setResultado(null), 6000)
+  }
+
+  async function startScanner() {
+    setScannerErro('')
+    if (scannerAtivo) return
+
+    try {
+      const cameras = await Html5Qrcode.getCameras()
+      if (!cameras || cameras.length === 0) {
+        setScannerErro('Nenhuma câmera encontrada.')
+        return
+      }
+
+      const cameraId = cameras[0].id
+      const html5QrCode = new Html5Qrcode('qr-reader')
+      html5QrcodeRef.current = html5QrCode
+
+      await html5QrCode.start(
+        cameraId,
+        { fps: 10, qrbox: 250 },
+        decodedText => {
+          stopScanner()
+          validarCodigo(decodedText)
+        },
+        errorMessage => {
+          console.debug('QR scan error:', errorMessage)
+        }
+      )
+
+      setScannerAtivo(true)
+    } catch (error) {
+      setScannerErro('Não foi possível iniciar a câmera. Verifique a permissão e tente novamente.')
+      console.error(error)
+    }
+  }
+
+  async function stopScanner() {
+    const instance = html5QrcodeRef.current
+    if (instance) {
+      try {
+        await instance.stop()
+      } catch (error) {
+        console.warn('Erro ao parar scanner', error)
+      }
+      instance.clear().catch(() => {})
+      html5QrcodeRef.current = null
+    }
+    setScannerAtivo(false)
   }
 
   const cores = {
@@ -41,12 +102,33 @@ export default function Portaria() {
         <h2 style={{color:'#92400e',marginBottom:4}}>🎪 Portaria</h2>
         <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Festa Junina UniEnsino 2026</p>
 
+        <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center',marginBottom:18}}>
+          <button onClick={startScanner}
+            disabled={scannerAtivo}
+            style={{padding:'12px 18px',background:'#10b981',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:'bold'}}>
+            📷 Usar câmera
+          </button>
+          <button onClick={stopScanner}
+            disabled={!scannerAtivo}
+            style={{padding:'12px 18px',background:'#ef4444',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:'bold'}}>
+            ✕ Parar câmera
+          </button>
+        </div>
+
+        {scannerErro && <p style={{color:'#991b1b',marginBottom:12}}>{scannerErro}</p>}
+
+        {scannerAtivo && (
+          <div style={{margin:'0 auto 20px',width:'100%',maxWidth:420,border:'2px solid #d97706',borderRadius:12,overflow:'hidden'}}>
+            <div id="qr-reader" style={{width:'100%',minHeight:320,background:'#000'}} />
+          </div>
+        )}
+
         <input value={codigo}
           onChange={e => setCodigo(e.target.value.toUpperCase())}
           onKeyDown={e => e.key === 'Enter' && validarCodigo(codigo)}
           placeholder="CÓDIGO DO CONVITE"
           style={{width:'100%',padding:14,fontSize:22,border:'2px solid #d97706',borderRadius:8,textAlign:'center',letterSpacing:4,fontWeight:'bold',marginBottom:12,boxSizing:'border-box'}}
-          autoFocus />
+          autoFocus={!scannerAtivo} />
 
         <button onClick={() => validarCodigo(codigo)} disabled={carregando}
           style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer'}}>
