@@ -8,6 +8,7 @@ export default function Portaria() {
   const [carregando, setCarregando] = useState(false)
   const [scannerAtivo, setScannerAtivo] = useState(false)
   const [scannerErro, setScannerErro] = useState('')
+  const [scannerStatus, setScannerStatus] = useState('')
   const html5QrcodeRef = useRef(null)
   const timeoutRef = useRef(null)
 
@@ -53,9 +54,11 @@ export default function Portaria() {
         return
       }
 
-      const cameraId = cameras[0].id
+      const preferredCamera = cameras.find(cam => /back|rear|environment|traseira/i.test(cam.label)) || cameras[0]
+      const cameraId = preferredCamera.id
       const html5QrCode = new Html5Qrcode('qr-reader')
       html5QrcodeRef.current = html5QrCode
+      setScannerStatus('Abrindo câmera...')
 
       await html5QrCode.start(
         cameraId,
@@ -70,13 +73,16 @@ export default function Portaria() {
       )
 
       setScannerAtivo(true)
+      setScannerStatus('Aponte a câmera para o QR Code')
     } catch (error) {
       setScannerErro('Não foi possível iniciar a câmera. Verifique a permissão e tente novamente.')
+      setScannerStatus('')
       console.error(error)
     }
   }
 
   async function stopScanner() {
+    setScannerStatus('')
     const instance = html5QrcodeRef.current
     if (instance) {
       try {
@@ -116,6 +122,7 @@ export default function Portaria() {
         </div>
 
         {scannerErro && <p style={{color:'#991b1b',marginBottom:12}}>{scannerErro}</p>}
+        {scannerStatus && !scannerErro && <p style={{color:'#065f46',marginBottom:12}}>{scannerStatus}</p>}
 
         {scannerAtivo && (
           <div style={{margin:'0 auto 20px',width:'100%',maxWidth:420,border:'2px solid #d97706',borderRadius:12,overflow:'hidden'}}>
