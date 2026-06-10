@@ -24,6 +24,9 @@ export default function Portaria() {
     }
     setCodigo('')
     setCarregando(false)
+
+    // Limpa resultado após 6 segundos
+    setTimeout(() => setResultado(null), 6000)
   }
 
   const cores = {
@@ -36,16 +39,17 @@ export default function Portaria() {
     <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:'#fff8e1'}}>
       <div style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:420,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
         <h2 style={{color:'#92400e',marginBottom:4}}>🎪 Portaria</h2>
-        <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Festa Junina UniEnsino 2025</p>
+        <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Festa Junina UniEnsino 2026</p>
 
         <input value={codigo}
           onChange={e => setCodigo(e.target.value.toUpperCase())}
           onKeyDown={e => e.key === 'Enter' && validarCodigo(codigo)}
           placeholder="CÓDIGO DO CONVITE"
-          style={{width:'100%',padding:14,fontSize:22,border:'2px solid #d97706',borderRadius:8,textAlign:'center',letterSpacing:4,fontWeight:'bold',marginBottom:12,boxSizing:'border-box'}} />
+          style={{width:'100%',padding:14,fontSize:22,border:'2px solid #d97706',borderRadius:8,textAlign:'center',letterSpacing:4,fontWeight:'bold',marginBottom:12,boxSizing:'border-box'}}
+          autoFocus />
 
         <button onClick={() => validarCodigo(codigo)} disabled={carregando}
-          style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer',marginBottom:12}}>
+          style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer'}}>
           {carregando ? 'Verificando...' : '✅ Validar Convite'}
         </button>
 
@@ -59,6 +63,7 @@ export default function Portaria() {
               {resultado.tipo === 'convidado' && <div style={{fontSize:13,marginTop:2}}>Convidado de {resultado.convidado_de}</div>}
               {resultado.tipo === 'aluno' && <div style={{fontSize:13,marginTop:2}}>🎓 Aluno</div>}
               {resultado.usado_em && <div style={{fontSize:12,marginTop:4}}>Usado em: {resultado.usado_em}</div>}
+              <div style={{fontSize:11,color:'#888',marginTop:8}}>Esta mensagem desaparece em 6 segundos</div>
             </div>
           )
         })()}

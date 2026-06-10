@@ -1,15 +1,37 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabase'
 
-const SENHA_ADMIN = 'festaadmin2025'
+const SENHA_ADMIN = 'festaadmin2026'
+const POR_PAGINA = 20
+
+async function reenviarEmail(convite) {
+  await fetch('https://mngrfqkavgoybxvttpuw.supabase.co/functions/v1/enviar-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uZ3JmcWthdmdveWJ4dnR0cHV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjcyNjQsImV4cCI6MjA5NjU0MzI2NH0.M28L-G-Gz6MR5D2k9tnQIrBAviAf0c4BGs1Ay_9dRpU`
+    },
+    body: JSON.stringify({
+      para: convite.email,
+      nome: convite.nome,
+      codigo: convite.codigo,
+      tipo: convite.tipo,
+      nomeAluno: convite.convidado_de || convite.nome
+    })
+  })
+}
 
 export default function Admin() {
   const [autenticado, setAutenticado] = useState(false)
   const [senha, setSenha] = useState('')
   const [convites, setConvites] = useState([])
   const [filtro, setFiltro] = useState('todos')
+  const [alunoSelecionado, setAlunoSelecionado] = useState('')
   const [busca, setBusca] = useState('')
   const [carregando, setCarregando] = useState(false)
+  const [pagina, setPagina] = useState(1)
+  const [reenviando, setReenviando] = useState(null)
+  const [cancelando, setCancelando] = useState(null)
 
   async function carregar() {
     setCarregando(true)
@@ -25,6 +47,25 @@ export default function Admin() {
     else alert('Senha incorreta!')
   }
 
+  async function handleReenviar(convite) {
+    setReenviando(convite.id)
+    try {
+      await reenviarEmail(convite)
+      alert(`Email reenviado para ${convite.email}`)
+    } catch {
+      alert('Erro ao reenviar email.')
+    }
+    setReenviando(null)
+  }
+
+  async function handleCancelar(convite) {
+    if (!confirm(`Cancelar convite de ${convite.nome}?`)) return
+    setCancelando(convite.id)
+    await supabase.from('convites').delete().eq('id', convite.id)
+    await carregar()
+    setCancelando(null)
+  }
+
   const filtrados = convites.filter(c => {
     const matchFiltro =
       filtro === 'todos' ? true :
@@ -32,15 +73,44 @@ export default function Admin() {
       filtro === 'nao_vieram' ? !c.usado_em :
       filtro === 'alunos' ? c.tipo === 'aluno' :
       c.tipo === 'convidado'
-    const matchBusca = busca === '' || c.nome.toLowerCase().includes(busca.toLowerCase()) || c.email.toLowerCase().includes(busca.toLowerCase())
-    return matchFiltro && matchBusca
+    const matchBusca = busca === '' ||
+      c.nome.toLowerCase().includes(busca.toLowerCase()) ||
+      c.email.toLowerCase().includes(busca.toLowerCase()) ||
+      (c.cpf || '').includes(busca) ||
+      (c.convidado_de || '').toLowerCase().includes(busca.toLowerCase())
+    const matchAluno = !alunoSelecionado ? true : c.convidado_de === alunoSelecionado
+    return matchFiltro && matchBusca && matchAluno
   })
+
+  const totalPaginas = Math.ceil(filtrados.length / POR_PAGINA)
+  const paginados = filtrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA)
 
   const total = convites.length
   const compareceram = convites.filter(c => c.usado_em).length
-  const naoVieram = total - compareceram
   const alunos = convites.filter(c => c.tipo === 'aluno').length
   const convidados = convites.filter(c => c.tipo === 'convidado').length
+  const alunosUnicos = Array.from(new Set(convites.filter(c => c.tipo === 'aluno').map(c => c.nome))).sort()
+  const convidadosDoAluno = alunoSelecionado
+    ? convites.filter(c => c.convidado_de === alunoSelecionado)
+    : []
+  const compareceramDoAluno = convidadosDoAluno.filter(c => c.usado_em).length
+
+  function exportarCSV() {
+    const header = ['Nome','Email','CPF','Curso','Tipo','Convidado de','Inscrito em','Compareceu']
+    const rows = filtrados.map(c => [
+      c.nome, c.email, c.cpf || '', c.curso || '',
+      c.tipo, c.convidado_de || '',
+      c.criado_em ? new Date(c.criado_em).toLocaleString('pt-BR') : '',
+      c.usado_em ? new Date(c.usado_em).toLocaleString('pt-BR') : 'Não'
+    ])
+    const csv = [header, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'inscritos-festa-junina.csv'
+    a.click()
+  }
 
   if (!autenticado) return (
     <div style={s.page}>
@@ -58,77 +128,154 @@ export default function Admin() {
 
   return (
     <div style={{fontFamily:'Arial,sans-serif',background:'#fff8e1',minHeight:'100vh',padding:20}}>
-      <div style={{maxWidth:900,margin:'0 auto'}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
-          <h2 style={{color:'#92400e'}}>🌽 Admin – Festa Junina 2025</h2>
-          <button onClick={carregar} style={s.btnSecundario}>🔄 Atualizar</button>
+      <div style={{maxWidth:1100,margin:'0 auto'}}>
+
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20,flexWrap:'wrap',gap:8}}>
+          <h2 style={{color:'#92400e'}}>🌽 Admin – Festa Junina 2026</h2>
+          <div style={{display:'flex',gap:8}}>
+            <button onClick={exportarCSV} style={s.btnVerde}>📥 Exportar CSV</button>
+            <button onClick={carregar} style={s.btnSecundario}>🔄 Atualizar</button>
+          </div>
         </div>
 
-        {/* Cards de resumo */}
-        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:12,marginBottom:20}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12,marginBottom:24}}>
           {[
             {label:'Total inscritos', valor:total, cor:'#92400e'},
             {label:'Compareceram', valor:compareceram, cor:'#065f46'},
-            {label:'Não vieram', valor:naoVieram, cor:'#991b1b'},
+            {label:'Não vieram', valor:total-compareceram, cor:'#991b1b'},
             {label:'Alunos', valor:alunos, cor:'#1e40af'},
             {label:'Convidados', valor:convidados, cor:'#6b21a8'},
+            ...(alunoSelecionado ? [
+              {label:`Convidados de ${alunoSelecionado}`, valor:convidadosDoAluno.length, cor:'#92400e'},
+              {label:'Compareceram deste aluno', valor:compareceramDoAluno, cor:'#065f46'},
+              {label:'Não vieram deste aluno', valor:convidadosDoAluno.length-compareceramDoAluno, cor:'#991b1b'},
+            ] : [])
           ].map((card,i) => (
             <div key={i} style={{background:'#fff',border:`2px solid ${card.cor}`,borderRadius:10,padding:16,textAlign:'center'}}>
-              <div style={{fontSize:28,fontWeight:'bold',color:card.cor}}>{card.valor}</div>
+              <div style={{fontSize:30,fontWeight:'bold',color:card.cor}}>{card.valor}</div>
               <div style={{fontSize:13,color:'#555'}}>{card.label}</div>
             </div>
           ))}
         </div>
 
-        {/* Filtros e busca */}
-        <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:16}}>
-          {['todos','alunos','convidados','compareceram','nao_vieram'].map(f => (
-            <button key={f} onClick={() => setFiltro(f)}
-              style={{...s.btnFiltro, background: filtro===f ? '#92400e' : '#fff', color: filtro===f ? '#fff' : '#92400e'}}>
-              {f === 'todos' ? 'Todos' : f === 'nao_vieram' ? 'Não vieram' : f.charAt(0).toUpperCase() + f.slice(1)}
+        <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:16,alignItems:'center'}}>
+          {[
+            {key:'todos',label:'Todos'},
+            {key:'alunos',label:'Alunos'},
+            {key:'convidados',label:'Convidados'},
+            {key:'compareceram',label:'Compareceram'},
+            {key:'nao_vieram',label:'Não vieram'},
+          ].map(f => (
+            <button key={f.key} onClick={() => { setFiltro(f.key); setPagina(1) }}
+              style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:20,cursor:'pointer',
+                fontWeight:'bold',fontSize:13,
+                background: filtro===f.key ? '#92400e' : '#fff',
+                color: filtro===f.key ? '#fff' : '#92400e'}}>
+              {f.label}
             </button>
           ))}
-          <input placeholder="🔍 Buscar nome ou email..." value={busca}
-            onChange={e => setBusca(e.target.value)}
-            style={{...s.input, flex:1, minWidth:200, marginBottom:0}} />
+          <input placeholder="🔍 Buscar nome, email, CPF ou aluno..."
+            value={busca} onChange={e => { setBusca(e.target.value); setPagina(1) }}
+            style={{...s.input,flex:1,minWidth:180,marginBottom:0}} />
         </div>
 
-        {/* Tabela */}
-        {carregando ? <p style={{textAlign:'center'}}>Carregando...</p> : (
-          <div style={{overflowX:'auto'}}>
-            <table style={{width:'100%',borderCollapse:'collapse',background:'#fff',borderRadius:10,overflow:'hidden',boxShadow:'0 2px 8px rgba(0,0,0,.06)'}}>
-              <thead>
-                <tr style={{background:'#92400e',color:'#fff'}}>
-                  {['Nome','Email','Tipo','Convidado de','Inscrito em','Compareceu'].map(h => (
-                    <th key={h} style={{padding:'10px 12px',textAlign:'left',fontSize:13}}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtrados.map((c,i) => (
-                  <tr key={c.id} style={{background: i%2===0 ? '#fff' : '#fffbf0', borderBottom:'1px solid #e5e7eb'}}>
-                    <td style={s.td}>{c.nome}</td>
-                    <td style={s.td}>{c.email}</td>
-                    <td style={s.td}>
-                      <span style={{background: c.tipo==='aluno' ? '#dbeafe' : '#ede9fe', color: c.tipo==='aluno' ? '#1e40af' : '#6b21a8', padding:'2px 8px', borderRadius:20, fontSize:12, fontWeight:'bold'}}>
-                        {c.tipo}
-                      </span>
-                    </td>
-                    <td style={s.td}>{c.convidado_de || '—'}</td>
-                    <td style={s.td}>{c.criado_em ? new Date(c.criado_em).toLocaleString('pt-BR') : '—'}</td>
-                    <td style={s.td}>
-                      {c.usado_em
-                        ? <span style={{color:'#065f46',fontWeight:'bold'}}>✅ {new Date(c.usado_em).toLocaleString('pt-BR')}</span>
-                        : <span style={{color:'#991b1b'}}>❌ Não</span>}
-                    </td>
-                  </tr>
-                ))}
-                {filtrados.length === 0 && (
-                  <tr><td colSpan={6} style={{textAlign:'center',padding:20,color:'#888'}}>Nenhum resultado encontrado.</td></tr>
-                )}
-              </tbody>
-            </table>
+        {alunosUnicos.length > 0 && (
+          <div style={{marginBottom:16}}>
+            <div style={{color:'#555',fontSize:13,marginBottom:8}}>Clique no aluno para ver apenas os convidados dele:</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+              <button onClick={() => { setAlunoSelecionado(''); setPagina(1) }}
+                style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:20,cursor:'pointer',
+                  background: !alunoSelecionado ? '#92400e' : '#fff',
+                  color: !alunoSelecionado ? '#fff' : '#92400e',fontWeight:'bold'}}>
+                Todos os alunos
+              </button>
+              {alunosUnicos.map(nome => (
+                <button key={nome} onClick={() => { setAlunoSelecionado(alunoSelecionado === nome ? '' : nome); setPagina(1) }}
+                  style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:20,cursor:'pointer',
+                    background: alunoSelecionado===nome ? '#92400e' : '#fff',
+                    color: alunoSelecionado===nome ? '#fff' : '#92400e',fontWeight:'bold',whiteSpace:'nowrap'}}>
+                  {nome}
+                </button>
+              ))}
+            </div>
           </div>
+        )}
+
+        <p style={{color:'#555',fontSize:13,marginBottom:10}}>
+          Mostrando {((pagina-1)*POR_PAGINA)+1}–{Math.min(pagina*POR_PAGINA, filtrados.length)} de {filtrados.length} registros
+        </p>
+
+        {carregando ? (
+          <p style={{textAlign:'center',padding:40}}>Carregando...</p>
+        ) : (
+          <>
+            <div style={{overflowX:'auto',borderRadius:10,boxShadow:'0 2px 8px rgba(0,0,0,.06)'}}>
+              <table style={{width:'100%',borderCollapse:'collapse',background:'#fff'}}>
+                <thead>
+                  <tr style={{background:'#92400e',color:'#fff'}}>
+                    {['Nome','Email','CPF','Tipo','Convidado de','Inscrito em','Compareceu','Ações'].map(h => (
+                      <th key={h} style={{padding:'10px 12px',textAlign:'left',fontSize:13,whiteSpace:'nowrap'}}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginados.length === 0 ? (
+                    <tr><td colSpan={8} style={{textAlign:'center',padding:30,color:'#888'}}>Nenhum resultado.</td></tr>
+                  ) : paginados.map((c,i) => (
+                    <tr key={c.id} style={{background:i%2===0?'#fff':'#fffbf0',borderBottom:'1px solid #e5e7eb'}}>
+                      <td style={s.td}><strong>{c.nome}</strong></td>
+                      <td style={s.td}>{c.email}</td>
+                      <td style={s.td}>{c.cpf ? c.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : '—'}</td>
+                      <td style={s.td}>
+                        <span style={{background:c.tipo==='aluno'?'#dbeafe':'#ede9fe',color:c.tipo==='aluno'?'#1e40af':'#6b21a8',padding:'2px 8px',borderRadius:20,fontSize:12,fontWeight:'bold'}}>
+                          {c.tipo}
+                        </span>
+                      </td>
+                      <td style={s.td}>{c.convidado_de || '—'}</td>
+                      <td style={s.td}>{c.criado_em ? new Date(c.criado_em).toLocaleString('pt-BR') : '—'}</td>
+                      <td style={s.td}>
+                        {c.usado_em
+                          ? <span style={{color:'#065f46',fontWeight:'bold',whiteSpace:'nowrap'}}>✅ {new Date(c.usado_em).toLocaleString('pt-BR')}</span>
+                          : <span style={{color:'#991b1b'}}>❌ Não</span>}
+                      </td>
+                      <td style={s.td}>
+                        <div style={{display:'flex',gap:4}}>
+                          <button onClick={() => handleReenviar(c)} disabled={reenviando===c.id}
+                            style={{padding:'4px 8px',background:'#1e40af',color:'#fff',border:'none',borderRadius:6,fontSize:11,cursor:'pointer',whiteSpace:'nowrap'}}>
+                            {reenviando===c.id ? '...' : '📧 Reenviar'}
+                          </button>
+                          <button onClick={() => handleCancelar(c)} disabled={cancelando===c.id}
+                            style={{padding:'4px 8px',background:'#ef4444',color:'#fff',border:'none',borderRadius:6,fontSize:11,cursor:'pointer',whiteSpace:'nowrap'}}>
+                            {cancelando===c.id ? '...' : '🗑️ Cancelar'}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {totalPaginas > 1 && (
+              <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:16,flexWrap:'wrap'}}>
+                <button onClick={() => setPagina(p => Math.max(1,p-1))} disabled={pagina===1}
+                  style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:8,cursor:'pointer',background:'#fff',color:'#92400e',fontWeight:'bold'}}>
+                  ← Anterior
+                </button>
+                {Array.from({length:totalPaginas},(_,i)=>i+1).map(p => (
+                  <button key={p} onClick={() => setPagina(p)}
+                    style={{padding:'6px 12px',border:'2px solid #92400e',borderRadius:8,cursor:'pointer',
+                      background:pagina===p?'#92400e':'#fff',color:pagina===p?'#fff':'#92400e',fontWeight:'bold'}}>
+                    {p}
+                  </button>
+                ))}
+                <button onClick={() => setPagina(p => Math.min(totalPaginas,p+1))} disabled={pagina===totalPaginas}
+                  style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:8,cursor:'pointer',background:'#fff',color:'#92400e',fontWeight:'bold'}}>
+                  Próxima →
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -142,6 +289,6 @@ const s = {
   input: {width:'100%',padding:10,border:'1px solid #d97706',borderRadius:6,fontSize:15,marginBottom:12,boxSizing:'border-box'},
   btnPrimario: {width:'100%',padding:12,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:16,fontWeight:'bold',cursor:'pointer'},
   btnSecundario: {padding:'8px 16px',background:'#fff',color:'#92400e',border:'2px solid #92400e',borderRadius:8,cursor:'pointer',fontWeight:'bold'},
-  btnFiltro: {padding:'6px 14px',border:'2px solid #92400e',borderRadius:20,cursor:'pointer',fontWeight:'bold',fontSize:13},
-  td: {padding:'10px 12px',fontSize:13}
+  btnVerde: {padding:'8px 16px',background:'#065f46',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:'bold'},
+  td: {padding:'10px 12px',fontSize:13,whiteSpace:'nowrap'}
 }

@@ -16,6 +16,28 @@ async function enviarEmail(para, nome, codigo, tipo, nomeAluno) {
   })
 }
 
+function validarCPF(cpf) {
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false
+  let soma = 0
+  for (let i = 0; i < 9; i++) soma += parseInt(cpf[i]) * (10 - i)
+  let resto = (soma * 10) % 11
+  if (resto === 10 || resto === 11) resto = 0
+  if (resto !== parseInt(cpf[9])) return false
+  soma = 0
+  for (let i = 0; i < 10; i++) soma += parseInt(cpf[i]) * (11 - i)
+  resto = (soma * 10) % 11
+  if (resto === 10 || resto === 11) resto = 0
+  return resto === parseInt(cpf[10])
+}
+
+function aplicarMascara(valor) {
+  const n = valor.replace(/\D/g, '').slice(0, 11)
+  if (n.length > 9) return n.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4')
+  if (n.length > 6) return n.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3')
+  if (n.length > 3) return n.replace(/(\d{3})(\d{1,3})/, '$1.$2')
+  return n
+}
+
 export default function Formulario() {
   const [form, setForm] = useState({ nome: '', email: '', cpf: '', curso: '' })
   const [convidados, setConvidados] = useState([{ nome: '', email: '' }])
@@ -29,117 +51,132 @@ export default function Formulario() {
     setConvidados(novos)
   }
 
-  function adicionarConvidado() {
-    setConvidados([...convidados, { nome: '', email: '' }])
-  }
-
-  function removerConvidado(i) {
-    setConvidados(convidados.filter((_, idx) => idx !== i))
-  }
-
-async function enviar() {
-  if (!form.nome || !form.email || !form.cpf || !form.curso) {
-    setErro('Preencha todos os campos obrigatórios.')
-    return
-  }
-  setErro('')
-  setEnviando(true)
-  try {
-    const codigoAluno = gerarCodigo()
-    const { error } = await supabase.from('convites').insert({
-      codigo: codigoAluno, nome: form.nome, email: form.email,
-      cpf: form.cpf, curso: form.curso, tipo: 'aluno', convidado_de: null
-    })
-    if (error) throw error
-    await enviarEmail(form.email, form.nome, codigoAluno, 'aluno', form.nome)
-
-    const convidadosValidos = convidados.filter(c => c.nome.trim() && c.email.trim() && c.email.includes('@'))
-    
-    for (let i = 0; i < convidadosValidos.length; i++) {
-      const c = convidadosValidos[i]
-      const codigoConv = gerarCodigo()
-      const { error: errConv } = await supabase.from('convites').insert({
-        codigo: codigoConv, nome: c.nome.trim(), email: c.email.trim(),
-        cpf: null, curso: null, tipo: 'convidado', convidado_de: form.nome
-      })
-      if (errConv) {
-        console.error('Erro ao salvar convidado:', errConv)
-        continue
-      }
-      await enviarEmail(c.email.trim(), c.nome.trim(), codigoConv, 'convidado', form.nome)
+  async function enviar() {
+    if (!form.nome || !form.email || !form.cpf || !form.curso) {
+      setErro('Preencha todos os campos obrigatórios.')
+      return
     }
+    const cpfLimpo = form.cpf.replace(/\D/g, '')
+    if (cpfLimpo.length !== 11) {
+      setErro('CPF incompleto. Digite os 11 dígitos.')
+      return
+    }
+    if (!validarCPF(cpfLimpo)) {
+      setErro('CPF inválido. Verifique e tente novamente.')
+      return
+    }
+    setErro('')
+    setEnviando(true)
+    try {
+      const codigoAluno = gerarCodigo()
+      const { error } = await supabase.from('convites').insert({
+        codigo: codigoAluno, nome: form.nome, email: form.email,
+        cpf: cpfLimpo, curso: form.curso, tipo: 'aluno', convidado_de: null
+      })
+      if (error) {
+        if (error.code === '23505') {
+          setErro('Este CPF já possui inscrição. Cada aluno pode se inscrever apenas uma vez. Se acredita que é um erro, entre em contato com a organização.')
+        } else {
+          setErro('Erro ao enviar. Tente novamente.')
+        }
+        setEnviando(false)
+        return
+      }
+      await enviarEmail(form.email, form.nome, codigoAluno, 'aluno', form.nome)
 
-    setSucesso(true)
-  } catch (e) {
-    setErro('Erro ao enviar. Tente novamente.')
-    console.error(e)
+      for (const c of convidados.filter(c => c.nome.trim() && c.email.includes('@'))) {
+        const cod = gerarCodigo()
+        const { error: e } = await supabase.from('convites').insert({
+          codigo: cod, nome: c.nome.trim(), email: c.email.trim(),
+          cpf: null, curso: null, tipo: 'convidado', convidado_de: form.nome
+        })
+        if (!e) await enviarEmail(c.email.trim(), c.nome.trim(), cod, 'convidado', form.nome)
+      }
+      setSucesso(true)
+    } catch (e) {
+      setErro('Erro ao enviar. Tente novamente.')
+      console.error(e)
+    }
+    setEnviando(false)
   }
-  setEnviando(false)
-}
 
   if (sucesso) return (
-    <div style={styles.container}>
-      <div style={styles.card}>
+    <div style={s.page}>
+      <div style={s.card}>
         <div style={{fontSize:60,textAlign:'center'}}>🎉</div>
-        <h2 style={styles.titulo}>Inscrição confirmada!</h2>
+        <h2 style={s.titulo}>Inscrição confirmada!</h2>
         <p style={{textAlign:'center',color:'#555'}}>Você e seus convidados receberão o QR Code por email em instantes.</p>
       </div>
     </div>
   )
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.titulo}>🌽 Festa Junina UniEnsino 2025</h2>
-        <p style={styles.sub}>Preencha seus dados para confirmar presença</p>
+    <div style={s.page}>
+      <div style={s.card}>
+        <h2 style={s.titulo}>🌽 Festa Junina UniEnsino 2026</h2>
+        <p style={s.sub}>Preencha seus dados para confirmar presença</p>
 
-        <label style={styles.label}>Nome completo *</label>
-        <input style={styles.input} value={form.nome} onChange={e => setForm({...form, nome: e.target.value})} />
+        <label style={s.label}>Nome completo *</label>
+        <input style={s.input} value={form.nome}
+          onChange={e => setForm({...form, nome: e.target.value})} />
 
-        <label style={styles.label}>Email *</label>
-        <input style={styles.input} type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+        <label style={s.label}>Email *</label>
+        <input style={s.input} type="email" value={form.email}
+          onChange={e => setForm({...form, email: e.target.value})} />
 
-        <label style={styles.label}>CPF *</label>
-        <input style={styles.input} value={form.cpf} onChange={e => setForm({...form, cpf: e.target.value})} placeholder="Somente números" />
+        <label style={s.label}>CPF *</label>
+        <input style={s.input} value={form.cpf}
+          onChange={e => setForm({...form, cpf: aplicarMascara(e.target.value)})}
+          placeholder="000.000.000-00" maxLength={14} inputMode="numeric" />
 
-        <label style={styles.label}>Curso e período *</label>
-        <input style={styles.input} value={form.curso} onChange={e => setForm({...form, curso: e.target.value})} placeholder="Ex: ADS – 1º período" />
+        <label style={s.label}>Curso e período *</label>
+        <input style={s.input} value={form.curso}
+          onChange={e => setForm({...form, curso: e.target.value})}
+          placeholder="Ex: ADS – 1º período" />
 
         <div style={{marginTop:24,marginBottom:8,borderTop:'1px solid #e5e7eb',paddingTop:16}}>
           <strong style={{color:'#92400e'}}>Convidados</strong>
+          <span style={{fontSize:12,color:'#888',marginLeft:8}}>opcional — sem limite</span>
         </div>
 
         {convidados.map((c, i) => (
           <div key={i} style={{background:'#fff3e0',borderRadius:8,padding:12,marginBottom:10}}>
             <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
               <span style={{fontWeight:'bold',color:'#78350f'}}>Convidado {i+1}</span>
-              {convidados.length > 1 && <button onClick={() => removerConvidado(i)} style={styles.btnRemover}>✕</button>}
+              {convidados.length > 1 && (
+                <button onClick={() => setConvidados(convidados.filter((_,idx)=>idx!==i))}
+                  style={s.btnRemover}>✕</button>
+              )}
             </div>
-            <input style={styles.input} placeholder="Nome completo" value={c.nome} onChange={e => atualizarConvidado(i, 'nome', e.target.value)} />
-            <input style={styles.input} placeholder="Email" type="email" value={c.email} onChange={e => atualizarConvidado(i, 'email', e.target.value)} />
+            <input style={s.input} placeholder="Nome completo" value={c.nome}
+              onChange={e => atualizarConvidado(i,'nome',e.target.value)} />
+            <input style={s.input} placeholder="Email" type="email" value={c.email}
+              onChange={e => atualizarConvidado(i,'email',e.target.value)} />
           </div>
         ))}
 
-        <button onClick={adicionarConvidado} style={styles.btnAdicionar}>+ Adicionar convidado</button>
+        <button onClick={() => setConvidados([...convidados,{nome:'',email:''}])}
+          style={s.btnAdicionar}>+ Adicionar convidado</button>
 
-        {erro && <p style={{color:'red',marginTop:10}}>{erro}</p>}
+        {erro && <p style={{color:'#991b1b',marginTop:10,fontSize:14,padding:8,background:'#fee2e2',borderRadius:6}}>{erro}</p>}
 
-        <button onClick={enviar} disabled={enviando} style={styles.btnEnviar}>
-          {enviando ? 'Enviando...' : '✅ Confirmar inscrição'}
+        <button onClick={enviar} disabled={enviando}
+          style={{...s.btnEnviar, opacity:enviando?0.7:1}}>
+          {enviando ? '⏳ Enviando...' : '✅ Confirmar inscrição'}
         </button>
       </div>
     </div>
   )
 }
 
-const styles = {
-  container: { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
-  card: { background:'#fff', border:'2px solid #d97706', borderRadius:14, padding:28, width:'100%', maxWidth:500, boxShadow:'0 4px 20px rgba(0,0,0,.08)' },
-  titulo: { color:'#92400e', textAlign:'center', marginBottom:6 },
-  sub: { textAlign:'center', color:'#78350f', fontSize:14, marginBottom:20 },
-  label: { display:'block', fontWeight:'bold', color:'#555', marginBottom:4, marginTop:12 },
-  input: { width:'100%', padding:10, border:'1px solid #d97706', borderRadius:6, fontSize:15, marginBottom:4 },
-  btnEnviar: { width:'100%', padding:14, background:'#92400e', color:'#fff', border:'none', borderRadius:8, fontSize:17, fontWeight:'bold', cursor:'pointer', marginTop:20 },
-  btnAdicionar: { width:'100%', padding:10, background:'#fff3e0', color:'#92400e', border:'2px dashed #d97706', borderRadius:8, fontSize:15, cursor:'pointer', marginTop:4 },
-  btnRemover: { background:'none', border:'none', color:'#ef4444', cursor:'pointer', fontWeight:'bold', fontSize:16 }
+const s = {
+  page:{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20},
+  card:{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:500,boxShadow:'0 4px 20px rgba(0,0,0,.08)'},
+  titulo:{color:'#92400e',textAlign:'center',marginBottom:6},
+  sub:{textAlign:'center',color:'#78350f',fontSize:14,marginBottom:20},
+  label:{display:'block',fontWeight:'bold',color:'#555',marginBottom:4,marginTop:12},
+  input:{width:'100%',padding:10,border:'1px solid #d97706',borderRadius:6,fontSize:15,marginBottom:4,boxSizing:'border-box'},
+  btnEnviar:{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer',marginTop:20},
+  btnAdicionar:{width:'100%',padding:10,background:'#fff3e0',color:'#92400e',border:'2px dashed #d97706',borderRadius:8,fontSize:15,cursor:'pointer',marginTop:4},
+  btnRemover:{background:'none',border:'none',color:'#ef4444',cursor:'pointer',fontWeight:'bold',fontSize:16}
 }

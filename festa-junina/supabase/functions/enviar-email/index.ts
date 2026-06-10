@@ -19,7 +19,7 @@ serve(async (req) => {
 
   const htmlBody = `
     <div style="font-family:Arial,sans-serif;max-width:500px;margin:auto;background:#fffbf0;border:2px solid #d97706;border-radius:14px;padding:28px;">
-      <h2 style="color:#92400e;text-align:center;">🌽 Festa Junina UniEnsino 2025</h2>
+      <h2 style="color:#92400e;text-align:center;">🌽 Festa Junina UniEnsino 2026</h2>
       <p>Olá, <strong>${nome}</strong>! 🎉</p>
       <p>${tipoLabel}</p>
       <p>Apresente o código abaixo na portaria:</p>
@@ -39,7 +39,7 @@ serve(async (req) => {
     body: JSON.stringify({
       sender: { name: 'Festa Junina UniEnsino', email: 'douglas.kevin201@gmail.com' },
       to: [{ email: para, name: nome }],
-      subject: '🌽 Seu convite – Festa Junina UniEnsino 2025',
+      subject: '🌽 Seu convite – Festa Junina UniEnsino 2026',
       htmlContent: htmlBody
     })
   })
