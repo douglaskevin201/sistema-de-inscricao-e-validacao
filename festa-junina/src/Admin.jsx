@@ -63,6 +63,7 @@ export default function Admin() {
     setCancelando(convite.id)
 
     const idsToDelete = [convite.id]
+
     if (convite.tipo === 'aluno' && convite.nome) {
       const { data: convidados, error: convidadoError } = await supabase
         .from('convites')
@@ -75,12 +76,12 @@ export default function Admin() {
         return
       }
 
-      if (convidados) {
+      if (convidados && convidados.length > 0) {
         idsToDelete.push(...convidados.map(c => c.id))
       }
     }
 
-    const { data: deletedData, error } = await supabase
+    const { error } = await supabase
       .from('convites')
       .delete()
       .in('id', idsToDelete)
@@ -91,19 +92,13 @@ export default function Admin() {
       return
     }
 
-    if (!deletedData || deletedData.length === 0) {
-      alert('Nenhum convite foi cancelado.')
-      setCancelando(null)
-      return
-    }
-
     setConvites(prev => prev.filter(c => !idsToDelete.includes(c.id)))
 
     if (convite.tipo === 'aluno' && alunoSelecionado === convite.nome) {
       setAlunoSelecionado('')
     }
 
-    await carregar()
+    alert(`Convite de ${convite.nome} cancelado com sucesso.`)
     setCancelando(null)
   }
 
@@ -243,7 +238,7 @@ export default function Admin() {
         )}
 
         <p style={{color:'#555',fontSize:13,marginBottom:10}}>
-          Mostrando {((pagina-1)*POR_PAGINA)+1}–{Math.min(pagina*POR_PAGINA, filtrados.length)} de {filtrados.length} registros
+          Mostrando {filtrados.length === 0 ? 0 : ((pagina-1)*POR_PAGINA)+1}–{Math.min(pagina*POR_PAGINA, filtrados.length)} de {filtrados.length} registros
         </p>
 
         {carregando ? (
