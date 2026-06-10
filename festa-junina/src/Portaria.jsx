@@ -7,9 +7,11 @@ export default function Portaria() {
   const [resultado, setResultado] = useState(null)
   const [carregando, setCarregando] = useState(false)
   const [scannerAtivo, setScannerAtivo] = useState(false)
+  const [scannerStarting, setScannerStarting] = useState(false)
   const [scannerErro, setScannerErro] = useState('')
   const [scannerStatus, setScannerStatus] = useState('')
   const html5QrcodeRef = useRef(null)
+  const scannerStartingRef = useRef(false)
   const timeoutRef = useRef(null)
 
   useEffect(() => {
@@ -45,48 +47,71 @@ export default function Portaria() {
 
   async function startScanner() {
     setScannerErro('')
-    if (scannerAtivo) return
-
-    try {
-      const cameras = await Html5Qrcode.getCameras()
-      if (!cameras || cameras.length === 0) {
-        setScannerErro('Nenhuma câmera encontrada.')
-        return
-      }
-
-      const preferredCamera = cameras.find(cam => /back|rear|environment|traseira/i.test(cam.label)) || cameras[0]
-      const cameraId = preferredCamera?.id
-      const cameraConfig = cameraId
-        ? cameraId
-        : { facingMode: { exact: 'environment' } }
-      const html5QrCode = new Html5Qrcode('qr-reader')
-      html5QrcodeRef.current = html5QrCode
-      setScannerStatus('Abrindo câmera...')
-
-      await html5QrCode.start(
-        cameraConfig,
-        { fps: 10, qrbox: 250 },
-        decodedText => {
-          stopScanner()
-          validarCodigo(decodedText)
-        },
-        errorMessage => {
-          console.debug('QR scan error:', errorMessage)
-        }
-      )
-
-      setScannerAtivo(true)
-      setScannerStatus('Aponte a câmera para o QR Code')
-    } catch (error) {
-      const mensagem = error?.message || String(error)
-      setScannerErro(`Não foi possível iniciar a câmera: ${mensagem}`)
-      setScannerStatus('')
-      console.error(error)
-    }
+    if (scannerAtivo || scannerStarting) return
+    setScannerStatus('Abrindo câmera...')
+    scannerStartingRef.current = true
+    setScannerStarting(true)
   }
+
+  useEffect(() => {
+    if (!scannerStarting) return
+
+    async function initScanner() {
+      try {
+        const cameras = await Html5Qrcode.getCameras()
+        if (!scannerStartingRef.current) return
+
+        if (!cameras || cameras.length === 0) {
+          setScannerErro('Nenhuma câmera encontrada.')
+          setScannerStarting(false)
+          scannerStartingRef.current = false
+          setScannerStatus('')
+          return
+        }
+
+        const preferredCamera = cameras.find(cam => /back|rear|environment|traseira/i.test(cam.label)) || cameras[0]
+        const cameraId = preferredCamera?.id
+        const cameraConfig = cameraId
+          ? cameraId
+          : { facingMode: { exact: 'environment' } }
+        const html5QrCode = new Html5Qrcode('qr-reader')
+        html5QrcodeRef.current = html5QrCode
+
+        if (!scannerStartingRef.current) return
+
+        await html5QrCode.start(
+          cameraConfig,
+          { fps: 10, qrbox: 250 },
+          decodedText => {
+            stopScanner()
+            validarCodigo(decodedText)
+          },
+          errorMessage => {
+            console.debug('QR scan error:', errorMessage)
+          }
+        )
+
+        if (!scannerStartingRef.current) return
+
+        setScannerAtivo(true)
+        setScannerStatus('Aponte a câmera para o QR Code')
+      } catch (error) {
+        const mensagem = error?.message || String(error)
+        setScannerErro(`Não foi possível iniciar a câmera: ${mensagem}`)
+        setScannerStatus('')
+      } finally {
+        setScannerStarting(false)
+        scannerStartingRef.current = false
+      }
+    }
+
+    initScanner()
+  }, [scannerStarting])
 
   async function stopScanner() {
     setScannerStatus('')
+    scannerStartingRef.current = false
+    setScannerStarting(false)
     const instance = html5QrcodeRef.current
     if (instance) {
       try {
@@ -114,12 +139,12 @@ export default function Portaria() {
 
         <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center',marginBottom:18}}>
           <button onClick={startScanner}
-            disabled={scannerAtivo}
+            disabled={scannerAtivo || scannerStarting}
             style={{padding:'12px 18px',background:'#10b981',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:'bold'}}>
             📷 Usar câmera
           </button>
           <button onClick={stopScanner}
-            disabled={!scannerAtivo}
+            disabled={!scannerAtivo && !scannerStarting}
             style={{padding:'12px 18px',background:'#ef4444',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:'bold'}}>
             ✕ Parar câmera
           </button>
@@ -128,7 +153,7 @@ export default function Portaria() {
         {scannerErro && <p style={{color:'#991b1b',marginBottom:12}}>{scannerErro}</p>}
         {scannerStatus && !scannerErro && <p style={{color:'#065f46',marginBottom:12}}>{scannerStatus}</p>}
 
-        {scannerAtivo && (
+        {(scannerAtivo || scannerStarting) && (
           <div style={{margin:'0 auto 20px',width:'100%',maxWidth:420,border:'2px solid #d97706',borderRadius:12,overflow:'hidden'}}>
             <div id="qr-reader" style={{width:'100%',minHeight:320,background:'#000'}} />
           </div>
