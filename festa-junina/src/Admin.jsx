@@ -61,7 +61,48 @@ export default function Admin() {
   async function handleCancelar(convite) {
     if (!confirm(`Cancelar convite de ${convite.nome}?`)) return
     setCancelando(convite.id)
-    await supabase.from('convites').delete().eq('id', convite.id)
+
+    const idsToDelete = [convite.id]
+    if (convite.tipo === 'aluno' && convite.nome) {
+      const { data: convidados, error: convidadoError } = await supabase
+        .from('convites')
+        .select('id')
+        .eq('convidado_de', convite.nome)
+
+      if (convidadoError) {
+        alert('Erro ao buscar convidados do aluno.')
+        setCancelando(null)
+        return
+      }
+
+      if (convidados) {
+        idsToDelete.push(...convidados.map(c => c.id))
+      }
+    }
+
+    const { data: deletedData, error } = await supabase
+      .from('convites')
+      .delete()
+      .in('id', idsToDelete)
+
+    if (error) {
+      alert('Erro ao cancelar convite.')
+      setCancelando(null)
+      return
+    }
+
+    if (!deletedData || deletedData.length === 0) {
+      alert('Nenhum convite foi cancelado.')
+      setCancelando(null)
+      return
+    }
+
+    setConvites(prev => prev.filter(c => !idsToDelete.includes(c.id)))
+
+    if (convite.tipo === 'aluno' && alunoSelecionado === convite.nome) {
+      setAlunoSelecionado('')
+    }
+
     await carregar()
     setCancelando(null)
   }

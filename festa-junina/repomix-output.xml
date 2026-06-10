@@ -1,0 +1,1733 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+eslint.config.js
+index.html
+package.json
+page_portaria.html
+public/favicon.svg
+public/icons.svg
+README.md
+src/Admin.jsx
+src/assets/hero.png
+src/assets/react.svg
+src/assets/vite.svg
+src/Formulario.jsx
+src/index.css
+src/main.jsx
+src/Portaria.jsx
+src/supabase.js
+supabase/.gitignore
+supabase/config.toml
+supabase/functions/enviar-email/.npmrc
+supabase/functions/enviar-email/deno.json
+supabase/functions/enviar-email/index.ts
+vercel.json
+vite.config.js
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".gitignore">
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.vercel
+</file>
+
+<file path="eslint.config.js">
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+  },
+])
+</file>
+
+<file path="index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Festa Junina UniEnsino</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="package.json">
+{
+  "name": "festa-junina",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "html5-qrcode": "^2.3.8",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^6.30.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
+    "vite": "^8.0.12"
+  }
+}
+</file>
+
+<file path="page_portaria.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Festa Junina UniEnsino</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script type="module" crossorigin src="/assets/index-BeBptOS2.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BDEnjTM9.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+</file>
+
+<file path="public/favicon.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="46" fill="none" viewBox="0 0 48 46"><path fill="#863bff" d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z" style="fill:#863bff;fill:color(display-p3 .5252 .23 1);fill-opacity:1"/><mask id="a" width="48" height="46" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M25.842 44.938c-.664.844-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.183c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.498 0-3.579-1.842-3.579H1.133c-.92 0-1.456-1.04-.92-1.787L9.91.473c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.578 1.842 3.578h11.377c.943 0 1.473 1.088.89 1.832L25.843 44.94z" style="fill:#000;fill-opacity:1"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#ede6ff" rx="5.508" ry="14.704" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -4.47 31.516)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#ede6ff" rx="10.399" ry="29.851" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -39.328 7.883)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#7e14ff" rx="5.508" ry="30.487" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -25.913 -14.639)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -32.644 -3.334)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -34.34 30.47)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#ede6ff" rx="14.072" ry="22.078" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="rotate(93.35 24.506 48.493)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx=".387" cy="8.972" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(39.51 .387 8.972)"/></g><g filter="url(#k)"><ellipse cx="47.523" cy="-6.092" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 47.523 -6.092)"/></g><g filter="url(#l)"><ellipse cx="41.412" cy="6.333" fill="#47bfff" rx="5.971" ry="9.665" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 41.412 6.333)"/></g><g filter="url(#m)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#n)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#o)"><ellipse cx="35.651" cy="29.907" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 35.651 29.907)"/></g><g filter="url(#p)"><ellipse cx="38.418" cy="32.4" fill="#47bfff" rx="5.971" ry="15.297" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 38.418 32.4)"/></g></g><defs><filter id="b" width="60.045" height="41.654" x="-19.77" y="16.149" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-54.613" y="-7.533" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-49.64" y="2.03" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-45.045" y="20.029" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-43.513" y="21.178" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="15.756" y="-17.901" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-27.636" y="-22.853" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="20.116" y="-38.415" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="24.641" y="-11.323" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="8.244" y="-2.416" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="18.713" y="10.588" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter></defs></svg>
+</file>
+
+<file path="public/icons.svg">
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="bluesky-icon" viewBox="0 0 16 17">
+    <g clip-path="url(#bluesky-clip)"><path fill="#08060d" d="M7.75 7.735c-.693-1.348-2.58-3.86-4.334-5.097-1.68-1.187-2.32-.981-2.74-.79C.188 2.065.1 2.812.1 3.251s.241 3.602.398 4.13c.52 1.744 2.367 2.333 4.07 2.145-2.495.37-4.71 1.278-1.805 4.512 3.196 3.309 4.38-.71 4.987-2.746.608 2.036 1.307 5.91 4.93 2.746 2.72-2.746.747-4.143-1.747-4.512 1.702.189 3.55-.4 4.07-2.145.156-.528.397-3.691.397-4.13s-.088-1.186-.575-1.406c-.42-.19-1.06-.395-2.741.79-1.755 1.24-3.64 3.752-4.334 5.099"/></g>
+    <defs><clipPath id="bluesky-clip"><path fill="#fff" d="M.1.85h15.3v15.3H.1z"/></clipPath></defs>
+  </symbol>
+  <symbol id="discord-icon" viewBox="0 0 20 19">
+    <path fill="#08060d" d="M16.224 3.768a14.5 14.5 0 0 0-3.67-1.153c-.158.286-.343.67-.47.976a13.5 13.5 0 0 0-4.067 0c-.128-.306-.317-.69-.476-.976A14.4 14.4 0 0 0 3.868 3.77C1.546 7.28.916 10.703 1.231 14.077a14.7 14.7 0 0 0 4.5 2.306q.545-.748.965-1.587a9.5 9.5 0 0 1-1.518-.74q.191-.14.372-.293c2.927 1.369 6.107 1.369 8.999 0q.183.152.372.294-.723.437-1.52.74.418.838.963 1.588a14.6 14.6 0 0 0 4.504-2.308c.37-3.911-.63-7.302-2.644-10.309m-9.13 8.234c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.894 0 1.614.82 1.599 1.82.001 1-.705 1.82-1.6 1.82m5.91 0c-.878 0-1.599-.82-1.599-1.82 0-.998.705-1.82 1.6-1.82.893 0 1.614.82 1.599 1.82 0 1-.706 1.82-1.6 1.82"/>
+  </symbol>
+  <symbol id="documentation-icon" viewBox="0 0 21 20">
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="m15.5 13.333 1.533 1.322c.645.555.967.833.967 1.178s-.322.623-.967 1.179L15.5 18.333m-3.333-5-1.534 1.322c-.644.555-.966.833-.966 1.178s.322.623.966 1.179l1.534 1.321"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M17.167 10.836v-4.32c0-1.41 0-2.117-.224-2.68-.359-.906-1.118-1.621-2.08-1.96-.599-.21-1.349-.21-2.848-.21-2.623 0-3.935 0-4.983.369-1.684.591-3.013 1.842-3.641 3.428C3 6.449 3 7.684 3 10.154v2.122c0 2.558 0 3.838.706 4.726q.306.383.713.671c.76.536 1.79.64 3.581.66"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M3 10a2.78 2.78 0 0 1 2.778-2.778c.555 0 1.209.097 1.748-.047.48-.129.854-.503.982-.982.145-.54.048-1.194.048-1.749a2.78 2.78 0 0 1 2.777-2.777"/>
+  </symbol>
+  <symbol id="github-icon" viewBox="0 0 19 19">
+    <path fill="#08060d" fill-rule="evenodd" d="M9.356 1.85C5.05 1.85 1.57 5.356 1.57 9.694a7.84 7.84 0 0 0 5.324 7.44c.387.079.528-.168.528-.376 0-.182-.013-.805-.013-1.454-2.165.467-2.616-.935-2.616-.935-.349-.91-.864-1.143-.864-1.143-.71-.48.051-.48.051-.48.787.051 1.2.805 1.2.805.695 1.194 1.817.857 2.268.649.064-.507.27-.857.49-1.052-1.728-.182-3.545-.857-3.545-3.87 0-.857.31-1.558.8-2.104-.078-.195-.349-1 .077-2.078 0 0 .657-.208 2.14.805a7.5 7.5 0 0 1 1.946-.26c.657 0 1.328.092 1.946.26 1.483-1.013 2.14-.805 2.14-.805.426 1.078.155 1.883.078 2.078.502.546.799 1.247.799 2.104 0 3.013-1.818 3.675-3.558 3.87.284.247.528.714.528 1.454 0 1.052-.012 1.896-.012 2.156 0 .208.142.455.528.377a7.84 7.84 0 0 0 5.324-7.441c.013-4.338-3.48-7.844-7.773-7.844" clip-rule="evenodd"/>
+  </symbol>
+  <symbol id="social-icon" viewBox="0 0 20 20">
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M12.5 6.667a4.167 4.167 0 1 0-8.334 0 4.167 4.167 0 0 0 8.334 0"/>
+    <path fill="none" stroke="#aa3bff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35" d="M2.5 16.667a5.833 5.833 0 0 1 8.75-5.053m3.837.474.513 1.035c.07.144.257.282.414.309l.93.155c.596.1.736.536.307.965l-.723.73a.64.64 0 0 0-.152.531l.207.903c.164.715-.213.991-.84.618l-.872-.52a.63.63 0 0 0-.577 0l-.872.52c-.624.373-1.003.094-.84-.618l.207-.903a.64.64 0 0 0-.152-.532l-.723-.729c-.426-.43-.289-.864.306-.964l.93-.156a.64.64 0 0 0 .412-.31l.513-1.034c.28-.562.735-.562 1.012 0"/>
+  </symbol>
+  <symbol id="x-icon" viewBox="0 0 19 19">
+    <path fill="#08060d" fill-rule="evenodd" d="M1.893 1.98c.052.072 1.245 1.769 2.653 3.77l2.892 4.114c.183.261.333.48.333.486s-.068.089-.152.183l-.522.593-.765.867-3.597 4.087c-.375.426-.734.834-.798.905a1 1 0 0 0-.118.148c0 .01.236.017.664.017h.663l.729-.83c.4-.457.796-.906.879-.999a692 692 0 0 0 1.794-2.038c.034-.037.301-.34.594-.675l.551-.624.345-.392a7 7 0 0 1 .34-.374c.006 0 .93 1.306 2.052 2.903l2.084 2.965.045.063h2.275c1.87 0 2.273-.003 2.266-.021-.008-.02-1.098-1.572-3.894-5.547-2.013-2.862-2.28-3.246-2.273-3.266.008-.019.282-.332 2.085-2.38l2-2.274 1.567-1.782c.022-.028-.016-.03-.65-.03h-.674l-.3.342a871 871 0 0 1-1.782 2.025c-.067.075-.405.458-.75.852a100 100 0 0 1-.803.91c-.148.172-.299.344-.99 1.127-.304.343-.32.358-.345.327-.015-.019-.904-1.282-1.976-2.808L6.365 1.85H1.8zm1.782.91 8.078 11.294c.772 1.08 1.413 1.973 1.425 1.984.016.017.241.02 1.05.017l1.03-.004-2.694-3.766L7.796 5.75 5.722 2.852l-1.039-.004-1.039-.004z" clip-rule="evenodd"/>
+  </symbol>
+</svg>
+</file>
+
+<file path="README.md">
+# 🌽 Sistema de Inscrição e Validação – Festa Junina UniEnsino 2025
+
+Sistema completo de gerenciamento de convites para eventos, desenvolvido para a Festa Junina da UniEnsino. Permite inscrição de alunos e convidados, envio automático de QR Codes por email e validação na portaria via celular.
+
+---
+
+## 🚀 Funcionalidades
+
+- **Formulário de inscrição** — alunos preenchem seus dados e adicionam convidados ilimitados
+- **Envio automático de QR Code** — cada inscrito recebe um email com QR Code e código único
+- **Validação na portaria** — funcionários validam convites pelo celular sem acesso ao sistema administrativo
+- **Painel administrativo** — visão completa de inscritos, convidados e presença em tempo real
+- **Proteção contra fraude** — cada código só pode ser utilizado uma única vez
+
+---
+
+## 🛠️ Tecnologias utilizadas
+
+| Tecnologia | Função |
+|---|---|
+| React + Vite | Interface do usuário |
+| Supabase | Banco de dados e Edge Functions |
+| Brevo (SendinBlue) | Envio de emails transacionais |
+| Vercel | Hospedagem e deploy |
+| QR Server API | Geração de QR Codes |
+
+---
+
+## 📁 Estrutura do projeto
+
+festa-junina/
+├── public/
+├── src/
+│   ├── Admin.jsx         # Painel administrativo
+│   ├── Formulario.jsx    # Formulário de inscrição
+│   ├── Portaria.jsx      # Validação de convites
+│   ├── supabase.js       # Configuração do Supabase
+│   ├── main.jsx          # Rotas da aplicação
+│   └── index.css         # Estilos globais
+├── supabase/
+│   └── functions/
+│       └── enviar-email/ # Edge Function de envio de email
+│           └── index.ts
+├── .env                  # Variáveis de ambiente (não versionar)
+├── vercel.json           # Configuração de rotas do Vercel
+├── package.json
+└── README.md
+
+---
+
+## 🌐 Rotas da aplicação
+
+| Rota | Descrição | Acesso |
+|---|---|---|
+| `/` | Formulário de inscrição | Público |
+| `/portaria` | Validação de QR Code | Funcionários |
+| `/admin` | Painel administrativo | Administrador |
+
+---
+
+## ⚙️ Configuração do ambiente
+
+### Pré-requisitos
+
+- Node.js v18+
+- Conta no [Supabase](https://supabase.com)
+- Conta no [Brevo](https://brevo.com)
+- Conta no [Vercel](https://vercel.com)
+
+### Variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+VITE_SUPABASE_URL=sua_url_do_supabase
+VITE_SUPABASE_ANON_KEY=sua_chave_anon_do_supabase
+```
+
+### Banco de dados (Supabase)
+
+Execute o seguinte SQL no Supabase SQL Editor:
+
+```sql
+create table convites (
+  id uuid default gen_random_uuid() primary key,
+  codigo text unique not null,
+  nome text not null,
+  email text not null,
+  cpf text,
+  curso text,
+  tipo text not null,
+  convidado_de text,
+  usado_em timestamp,
+  criado_em timestamp default now()
+);
+
+alter table convites enable row level security;
+
+create policy "permitir insert publico" on convites
+for insert with check (true);
+
+create policy "permitir select publico" on convites
+for select using (true);
+
+create policy "permitir update publico" on convites
+for update using (true);
+```
+
+### Edge Function (envio de email)
+
+Configure os secrets no Supabase:
+
+```bash
+supabase secrets set BREVO_KEY=sua_chave_brevo --project-ref seu_project_ref
+```
+
+Deploy da função:
+
+```bash
+supabase functions deploy enviar-email --project-ref seu_project_ref
+```
+
+---
+
+## 💻 Rodando localmente
+
+```bash
+# Instalar dependências
+npm install
+
+# Iniciar servidor de desenvolvimento
+npm run dev
+```
+
+Acesse `http://localhost:5173`
+
+---
+
+## 🚢 Deploy no Vercel
+
+```bash
+# Build do projeto
+npm run build
+
+# Deploy
+vercel build --prod
+vercel deploy --prebuilt --prod
+```
+
+### Variáveis de ambiente no Vercel
+
+```bash
+vercel env add VITE_SUPABASE_URL
+vercel env add VITE_SUPABASE_ANON_KEY
+```
+
+---
+
+## 📱 Como usar
+
+### Aluno
+1. Acessa o link do formulário
+2. Preenche nome, email, CPF e curso
+3. Adiciona convidados (opcional, sem limite)
+4. Confirma a inscrição
+5. Recebe QR Code no email
+
+### Portaria
+1. Acessa o link `/portaria` no celular
+2. Digita o código do convite ou lê o QR Code
+3. Sistema mostra ✅ ENTRADA LIBERADA ou ❌ CONVITE INVÁLIDO
+4. Convite marcado como usado automaticamente
+
+### Administrador
+1. Acessa `/admin`
+2. Insere a senha de administrador
+3. Visualiza todos os inscritos com filtros
+4. Acompanha presença em tempo real
+
+---
+
+## 🔒 Segurança
+
+- Cada QR Code é único e gerado aleatoriamente
+- Convites só podem ser utilizados uma única vez
+- Página de portaria não tem acesso aos dados administrativos
+- Página de admin protegida por senha
+- Row Level Security habilitado no Supabase
+
+---
+
+## 📊 Painel administrativo
+
+O painel admin exibe:
+
+- Total de inscritos
+- Quantidade de alunos vs convidados  
+- Quantos compareceram vs não vieram
+- Tabela completa com filtros e busca
+- Horário exato de cada entrada validada
+
+---
+
+## 🐛 Problemas conhecidos
+
+- O email remetente não pode ser o mesmo email do aluno inscrito (limitação do Brevo com Gmail)
+- Para uso em produção recomenda-se configurar um domínio próprio no Brevo
+
+---
+
+## 📅 Próximas melhorias
+
+- [ ] Configurar domínio próprio para envio de emails
+- [ ] Exportar lista de presença em CSV/Excel
+- [ ] Leitura automática de QR Code pela câmera na portaria
+- [ ] Envio de lembrete por email antes do evento
+- [ ] Limite de convidados por aluno configurável
+
+---
+
+## 👨‍💻 Desenvolvido por
+
+Kevin Douglas — Estudante de Análise e Desenvolvimento de Sistemas  
+UniEnsino — 2026
+</file>
+
+<file path="src/Admin.jsx">
+import { useState, useEffect } from 'react'
+import { supabase } from './supabase'
+
+const SENHA_ADMIN = 'festaadmin2026'
+const POR_PAGINA = 20
+
+async function reenviarEmail(convite) {
+  await fetch('https://mngrfqkavgoybxvttpuw.supabase.co/functions/v1/enviar-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uZ3JmcWthdmdveWJ4dnR0cHV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjcyNjQsImV4cCI6MjA5NjU0MzI2NH0.M28L-G-Gz6MR5D2k9tnQIrBAviAf0c4BGs1Ay_9dRpU`
+    },
+    body: JSON.stringify({
+      para: convite.email,
+      nome: convite.nome,
+      codigo: convite.codigo,
+      tipo: convite.tipo,
+      nomeAluno: convite.convidado_de || convite.nome
+    })
+  })
+}
+
+export default function Admin() {
+  const [autenticado, setAutenticado] = useState(false)
+  const [senha, setSenha] = useState('')
+  const [convites, setConvites] = useState([])
+  const [filtro, setFiltro] = useState('todos')
+  const [alunoSelecionado, setAlunoSelecionado] = useState('')
+  const [busca, setBusca] = useState('')
+  const [carregando, setCarregando] = useState(false)
+  const [pagina, setPagina] = useState(1)
+  const [reenviando, setReenviando] = useState(null)
+  const [cancelando, setCancelando] = useState(null)
+
+  async function carregar() {
+    setCarregando(true)
+    const { data } = await supabase.from('convites').select('*').order('criado_em', { ascending: false })
+    setConvites(data || [])
+    setCarregando(false)
+  }
+
+  useEffect(() => { if (autenticado) carregar() }, [autenticado])
+
+  function login() {
+    if (senha === SENHA_ADMIN) setAutenticado(true)
+    else alert('Senha incorreta!')
+  }
+
+  async function handleReenviar(convite) {
+    setReenviando(convite.id)
+    try {
+      await reenviarEmail(convite)
+      alert(`Email reenviado para ${convite.email}`)
+    } catch {
+      alert('Erro ao reenviar email.')
+    }
+    setReenviando(null)
+  }
+
+  async function handleCancelar(convite) {
+    if (!confirm(`Cancelar convite de ${convite.nome}?`)) return
+    setCancelando(convite.id)
+
+    const idsToDelete = [convite.id]
+    if (convite.tipo === 'aluno' && convite.nome) {
+      const { data: convidados, error: convidadoError } = await supabase
+        .from('convites')
+        .select('id')
+        .eq('convidado_de', convite.nome)
+
+      if (convidadoError) {
+        alert('Erro ao buscar convidados do aluno.')
+        setCancelando(null)
+        return
+      }
+
+      if (convidados) {
+        idsToDelete.push(...convidados.map(c => c.id))
+      }
+    }
+
+    const { data: deletedData, error } = await supabase
+      .from('convites')
+      .delete()
+      .in('id', idsToDelete)
+
+    if (error) {
+      alert('Erro ao cancelar convite.')
+      setCancelando(null)
+      return
+    }
+
+    if (!deletedData || deletedData.length === 0) {
+      alert('Nenhum convite foi cancelado.')
+      setCancelando(null)
+      return
+    }
+
+    setConvites(prev => prev.filter(c => !idsToDelete.includes(c.id)))
+
+    if (convite.tipo === 'aluno' && alunoSelecionado === convite.nome) {
+      setAlunoSelecionado('')
+    }
+
+    await carregar()
+    setCancelando(null)
+  }
+
+  const filtrados = convites.filter(c => {
+    const matchFiltro =
+      filtro === 'todos' ? true :
+      filtro === 'compareceram' ? !!c.usado_em :
+      filtro === 'nao_vieram' ? !c.usado_em :
+      filtro === 'alunos' ? c.tipo === 'aluno' :
+      c.tipo === 'convidado'
+    const matchBusca = busca === '' ||
+      c.nome.toLowerCase().includes(busca.toLowerCase()) ||
+      c.email.toLowerCase().includes(busca.toLowerCase()) ||
+      (c.cpf || '').includes(busca) ||
+      (c.convidado_de || '').toLowerCase().includes(busca.toLowerCase())
+    const matchAluno = !alunoSelecionado ? true : c.convidado_de === alunoSelecionado
+    return matchFiltro && matchBusca && matchAluno
+  })
+
+  const totalPaginas = Math.ceil(filtrados.length / POR_PAGINA)
+  const paginados = filtrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA)
+
+  const total = convites.length
+  const compareceram = convites.filter(c => c.usado_em).length
+  const alunos = convites.filter(c => c.tipo === 'aluno').length
+  const convidados = convites.filter(c => c.tipo === 'convidado').length
+  const alunosUnicos = Array.from(new Set(convites.filter(c => c.tipo === 'aluno').map(c => c.nome))).sort()
+  const convidadosDoAluno = alunoSelecionado
+    ? convites.filter(c => c.convidado_de === alunoSelecionado)
+    : []
+  const compareceramDoAluno = convidadosDoAluno.filter(c => c.usado_em).length
+
+  function exportarCSV() {
+    const header = ['Nome','Email','CPF','Curso','Tipo','Convidado de','Inscrito em','Compareceu']
+    const rows = filtrados.map(c => [
+      c.nome, c.email, c.cpf || '', c.curso || '',
+      c.tipo, c.convidado_de || '',
+      c.criado_em ? new Date(c.criado_em).toLocaleString('pt-BR') : '',
+      c.usado_em ? new Date(c.usado_em).toLocaleString('pt-BR') : 'Não'
+    ])
+    const csv = [header, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'inscritos-festa-junina.csv'
+    a.click()
+  }
+
+  if (!autenticado) return (
+    <div style={s.page}>
+      <div style={s.card}>
+        <h2 style={s.titulo}>🔐 Admin – Festa Junina</h2>
+        <p style={{textAlign:'center',color:'#78350f',marginBottom:20}}>Acesso restrito</p>
+        <input type="password" placeholder="Senha" value={senha}
+          onChange={e => setSenha(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && login()}
+          style={s.input} />
+        <button onClick={login} style={s.btnPrimario}>Entrar</button>
+      </div>
+    </div>
+  )
+
+  return (
+    <div style={{fontFamily:'Arial,sans-serif',background:'#fff8e1',minHeight:'100vh',padding:20}}>
+      <div style={{maxWidth:1100,margin:'0 auto'}}>
+
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20,flexWrap:'wrap',gap:8}}>
+          <h2 style={{color:'#92400e'}}>🌽 Admin – Festa Junina 2026</h2>
+          <div style={{display:'flex',gap:8}}>
+            <button onClick={exportarCSV} style={s.btnVerde}>📥 Exportar CSV</button>
+            <button onClick={carregar} style={s.btnSecundario}>🔄 Atualizar</button>
+          </div>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12,marginBottom:24}}>
+          {[
+            {label:'Total inscritos', valor:total, cor:'#92400e'},
+            {label:'Compareceram', valor:compareceram, cor:'#065f46'},
+            {label:'Não vieram', valor:total-compareceram, cor:'#991b1b'},
+            {label:'Alunos', valor:alunos, cor:'#1e40af'},
+            {label:'Convidados', valor:convidados, cor:'#6b21a8'},
+            ...(alunoSelecionado ? [
+              {label:`Convidados de ${alunoSelecionado}`, valor:convidadosDoAluno.length, cor:'#92400e'},
+              {label:'Compareceram deste aluno', valor:compareceramDoAluno, cor:'#065f46'},
+              {label:'Não vieram deste aluno', valor:convidadosDoAluno.length-compareceramDoAluno, cor:'#991b1b'},
+            ] : [])
+          ].map((card,i) => (
+            <div key={i} style={{background:'#fff',border:`2px solid ${card.cor}`,borderRadius:10,padding:16,textAlign:'center'}}>
+              <div style={{fontSize:30,fontWeight:'bold',color:card.cor}}>{card.valor}</div>
+              <div style={{fontSize:13,color:'#555'}}>{card.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:16,alignItems:'center'}}>
+          {[
+            {key:'todos',label:'Todos'},
+            {key:'alunos',label:'Alunos'},
+            {key:'convidados',label:'Convidados'},
+            {key:'compareceram',label:'Compareceram'},
+            {key:'nao_vieram',label:'Não vieram'},
+          ].map(f => (
+            <button key={f.key} onClick={() => { setFiltro(f.key); setPagina(1) }}
+              style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:20,cursor:'pointer',
+                fontWeight:'bold',fontSize:13,
+                background: filtro===f.key ? '#92400e' : '#fff',
+                color: filtro===f.key ? '#fff' : '#92400e'}}>
+              {f.label}
+            </button>
+          ))}
+          <input placeholder="🔍 Buscar nome, email, CPF ou aluno..."
+            value={busca} onChange={e => { setBusca(e.target.value); setPagina(1) }}
+            style={{...s.input,flex:1,minWidth:180,marginBottom:0}} />
+        </div>
+
+        {alunosUnicos.length > 0 && (
+          <div style={{marginBottom:16}}>
+            <div style={{color:'#555',fontSize:13,marginBottom:8}}>Clique no aluno para ver apenas os convidados dele:</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+              <button onClick={() => { setAlunoSelecionado(''); setPagina(1) }}
+                style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:20,cursor:'pointer',
+                  background: !alunoSelecionado ? '#92400e' : '#fff',
+                  color: !alunoSelecionado ? '#fff' : '#92400e',fontWeight:'bold'}}>
+                Todos os alunos
+              </button>
+              {alunosUnicos.map(nome => (
+                <button key={nome} onClick={() => { setAlunoSelecionado(alunoSelecionado === nome ? '' : nome); setPagina(1) }}
+                  style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:20,cursor:'pointer',
+                    background: alunoSelecionado===nome ? '#92400e' : '#fff',
+                    color: alunoSelecionado===nome ? '#fff' : '#92400e',fontWeight:'bold',whiteSpace:'nowrap'}}>
+                  {nome}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <p style={{color:'#555',fontSize:13,marginBottom:10}}>
+          Mostrando {((pagina-1)*POR_PAGINA)+1}–{Math.min(pagina*POR_PAGINA, filtrados.length)} de {filtrados.length} registros
+        </p>
+
+        {carregando ? (
+          <p style={{textAlign:'center',padding:40}}>Carregando...</p>
+        ) : (
+          <>
+            <div style={{overflowX:'auto',borderRadius:10,boxShadow:'0 2px 8px rgba(0,0,0,.06)'}}>
+              <table style={{width:'100%',borderCollapse:'collapse',background:'#fff'}}>
+                <thead>
+                  <tr style={{background:'#92400e',color:'#fff'}}>
+                    {['Nome','Email','CPF','Tipo','Convidado de','Inscrito em','Compareceu','Ações'].map(h => (
+                      <th key={h} style={{padding:'10px 12px',textAlign:'left',fontSize:13,whiteSpace:'nowrap'}}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginados.length === 0 ? (
+                    <tr><td colSpan={8} style={{textAlign:'center',padding:30,color:'#888'}}>Nenhum resultado.</td></tr>
+                  ) : paginados.map((c,i) => (
+                    <tr key={c.id} style={{background:i%2===0?'#fff':'#fffbf0',borderBottom:'1px solid #e5e7eb'}}>
+                      <td style={s.td}><strong>{c.nome}</strong></td>
+                      <td style={s.td}>{c.email}</td>
+                      <td style={s.td}>{c.cpf ? c.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : '—'}</td>
+                      <td style={s.td}>
+                        <span style={{background:c.tipo==='aluno'?'#dbeafe':'#ede9fe',color:c.tipo==='aluno'?'#1e40af':'#6b21a8',padding:'2px 8px',borderRadius:20,fontSize:12,fontWeight:'bold'}}>
+                          {c.tipo}
+                        </span>
+                      </td>
+                      <td style={s.td}>{c.convidado_de || '—'}</td>
+                      <td style={s.td}>{c.criado_em ? new Date(c.criado_em).toLocaleString('pt-BR') : '—'}</td>
+                      <td style={s.td}>
+                        {c.usado_em
+                          ? <span style={{color:'#065f46',fontWeight:'bold',whiteSpace:'nowrap'}}>✅ {new Date(c.usado_em).toLocaleString('pt-BR')}</span>
+                          : <span style={{color:'#991b1b'}}>❌ Não</span>}
+                      </td>
+                      <td style={s.td}>
+                        <div style={{display:'flex',gap:4}}>
+                          <button onClick={() => handleReenviar(c)} disabled={reenviando===c.id}
+                            style={{padding:'4px 8px',background:'#1e40af',color:'#fff',border:'none',borderRadius:6,fontSize:11,cursor:'pointer',whiteSpace:'nowrap'}}>
+                            {reenviando===c.id ? '...' : '📧 Reenviar'}
+                          </button>
+                          <button onClick={() => handleCancelar(c)} disabled={cancelando===c.id}
+                            style={{padding:'4px 8px',background:'#ef4444',color:'#fff',border:'none',borderRadius:6,fontSize:11,cursor:'pointer',whiteSpace:'nowrap'}}>
+                            {cancelando===c.id ? '...' : '🗑️ Cancelar'}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {totalPaginas > 1 && (
+              <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:16,flexWrap:'wrap'}}>
+                <button onClick={() => setPagina(p => Math.max(1,p-1))} disabled={pagina===1}
+                  style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:8,cursor:'pointer',background:'#fff',color:'#92400e',fontWeight:'bold'}}>
+                  ← Anterior
+                </button>
+                {Array.from({length:totalPaginas},(_,i)=>i+1).map(p => (
+                  <button key={p} onClick={() => setPagina(p)}
+                    style={{padding:'6px 12px',border:'2px solid #92400e',borderRadius:8,cursor:'pointer',
+                      background:pagina===p?'#92400e':'#fff',color:pagina===p?'#fff':'#92400e',fontWeight:'bold'}}>
+                    {p}
+                  </button>
+                ))}
+                <button onClick={() => setPagina(p => Math.min(totalPaginas,p+1))} disabled={pagina===totalPaginas}
+                  style={{padding:'6px 14px',border:'2px solid #92400e',borderRadius:8,cursor:'pointer',background:'#fff',color:'#92400e',fontWeight:'bold'}}>
+                  Próxima →
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+const s = {
+  page: {minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20},
+  card: {background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:400},
+  titulo: {color:'#92400e',textAlign:'center',marginBottom:6},
+  input: {width:'100%',padding:10,border:'1px solid #d97706',borderRadius:6,fontSize:15,marginBottom:12,boxSizing:'border-box'},
+  btnPrimario: {width:'100%',padding:12,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:16,fontWeight:'bold',cursor:'pointer'},
+  btnSecundario: {padding:'8px 16px',background:'#fff',color:'#92400e',border:'2px solid #92400e',borderRadius:8,cursor:'pointer',fontWeight:'bold'},
+  btnVerde: {padding:'8px 16px',background:'#065f46',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:'bold'},
+  td: {padding:'10px 12px',fontSize:13,whiteSpace:'nowrap'}
+}
+</file>
+
+<file path="src/assets/react.svg">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="35.93" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 228"><path fill="#00D8FF" d="M210.483 73.824a171.49 171.49 0 0 0-8.24-2.597c.465-1.9.893-3.777 1.273-5.621c6.238-30.281 2.16-54.676-11.769-62.708c-13.355-7.7-35.196.329-57.254 19.526a171.23 171.23 0 0 0-6.375 5.848a155.866 155.866 0 0 0-4.241-3.917C100.759 3.829 77.587-4.822 63.673 3.233C50.33 10.957 46.379 33.89 51.995 62.588a170.974 170.974 0 0 0 1.892 8.48c-3.28.932-6.445 1.924-9.474 2.98C17.309 83.498 0 98.307 0 113.668c0 15.865 18.582 31.778 46.812 41.427a145.52 145.52 0 0 0 6.921 2.165a167.467 167.467 0 0 0-2.01 9.138c-5.354 28.2-1.173 50.591 12.134 58.266c13.744 7.926 36.812-.22 59.273-19.855a145.567 145.567 0 0 0 5.342-4.923a168.064 168.064 0 0 0 6.92 6.314c21.758 18.722 43.246 26.282 56.54 18.586c13.731-7.949 18.194-32.003 12.4-61.268a145.016 145.016 0 0 0-1.535-6.842c1.62-.48 3.21-.974 4.76-1.488c29.348-9.723 48.443-25.443 48.443-41.52c0-15.417-17.868-30.326-45.517-39.844Zm-6.365 70.984c-1.4.463-2.836.91-4.3 1.345c-3.24-10.257-7.612-21.163-12.963-32.432c5.106-11 9.31-21.767 12.459-31.957c2.619.758 5.16 1.557 7.61 2.4c23.69 8.156 38.14 20.213 38.14 29.504c0 9.896-15.606 22.743-40.946 31.14Zm-10.514 20.834c2.562 12.94 2.927 24.64 1.23 33.787c-1.524 8.219-4.59 13.698-8.382 15.893c-8.067 4.67-25.32-1.4-43.927-17.412a156.726 156.726 0 0 1-6.437-5.87c7.214-7.889 14.423-17.06 21.459-27.246c12.376-1.098 24.068-2.894 34.671-5.345a134.17 134.17 0 0 1 1.386 6.193ZM87.276 214.515c-7.882 2.783-14.16 2.863-17.955.675c-8.075-4.657-11.432-22.636-6.853-46.752a156.923 156.923 0 0 1 1.869-8.499c10.486 2.32 22.093 3.988 34.498 4.994c7.084 9.967 14.501 19.128 21.976 27.15a134.668 134.668 0 0 1-4.877 4.492c-9.933 8.682-19.886 14.842-28.658 17.94ZM50.35 144.747c-12.483-4.267-22.792-9.812-29.858-15.863c-6.35-5.437-9.555-10.836-9.555-15.216c0-9.322 13.897-21.212 37.076-29.293c2.813-.98 5.757-1.905 8.812-2.773c3.204 10.42 7.406 21.315 12.477 32.332c-5.137 11.18-9.399 22.249-12.634 32.792a134.718 134.718 0 0 1-6.318-1.979Zm12.378-84.26c-4.811-24.587-1.616-43.134 6.425-47.789c8.564-4.958 27.502 2.111 47.463 19.835a144.318 144.318 0 0 1 3.841 3.545c-7.438 7.987-14.787 17.08-21.808 26.988c-12.04 1.116-23.565 2.908-34.161 5.309a160.342 160.342 0 0 1-1.76-7.887Zm110.427 27.268a347.8 347.8 0 0 0-7.785-12.803c8.168 1.033 15.994 2.404 23.343 4.08c-2.206 7.072-4.956 14.465-8.193 22.045a381.151 381.151 0 0 0-7.365-13.322Zm-45.032-43.861c5.044 5.465 10.096 11.566 15.065 18.186a322.04 322.04 0 0 0-30.257-.006c4.974-6.559 10.069-12.652 15.192-18.18ZM82.802 87.83a323.167 323.167 0 0 0-7.227 13.238c-3.184-7.553-5.909-14.98-8.134-22.152c7.304-1.634 15.093-2.97 23.209-3.984a321.524 321.524 0 0 0-7.848 12.897Zm8.081 65.352c-8.385-.936-16.291-2.203-23.593-3.793c2.26-7.3 5.045-14.885 8.298-22.6a321.187 321.187 0 0 0 7.257 13.246c2.594 4.48 5.28 8.868 8.038 13.147Zm37.542 31.03c-5.184-5.592-10.354-11.779-15.403-18.433c4.902.192 9.899.29 14.978.29c5.218 0 10.376-.117 15.453-.343c-4.985 6.774-10.018 12.97-15.028 18.486Zm52.198-57.817c3.422 7.8 6.306 15.345 8.596 22.52c-7.422 1.694-15.436 3.058-23.88 4.071a382.417 382.417 0 0 0 7.859-13.026a347.403 347.403 0 0 0 7.425-13.565Zm-16.898 8.101a358.557 358.557 0 0 1-12.281 19.815a329.4 329.4 0 0 1-23.444.823c-7.967 0-15.716-.248-23.178-.732a310.202 310.202 0 0 1-12.513-19.846h.001a307.41 307.41 0 0 1-10.923-20.627a310.278 310.278 0 0 1 10.89-20.637l-.001.001a307.318 307.318 0 0 1 12.413-19.761c7.613-.576 15.42-.876 23.31-.876H128c7.926 0 15.743.303 23.354.883a329.357 329.357 0 0 1 12.335 19.695a358.489 358.489 0 0 1 11.036 20.54a329.472 329.472 0 0 1-11 20.722Zm22.56-122.124c8.572 4.944 11.906 24.881 6.52 51.026c-.344 1.668-.73 3.367-1.15 5.09c-10.622-2.452-22.155-4.275-34.23-5.408c-7.034-10.017-14.323-19.124-21.64-27.008a160.789 160.789 0 0 1 5.888-5.4c18.9-16.447 36.564-22.941 44.612-18.3ZM128 90.808c12.625 0 22.86 10.235 22.86 22.86s-10.235 22.86-22.86 22.86s-22.86-10.235-22.86-22.86s10.235-22.86 22.86-22.86Z"></path></svg>
+</file>
+
+<file path="src/assets/vite.svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="47" fill="none" aria-labelledby="vite-logo-title" viewBox="0 0 77 47"><title id="vite-logo-title">Vite</title><style>.parenthesis{fill:#000}@media (prefers-color-scheme:dark){.parenthesis{fill:#fff}}</style><path fill="#9135ff" d="M40.151 45.71c-.663.844-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.493c-.92 0-1.457-1.04-.92-1.788l7.479-10.471c1.07-1.498 0-3.578-1.842-3.578H15.443c-.92 0-1.456-1.04-.92-1.788l9.696-13.576c.213-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.472c-1.07 1.497 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.087.89 1.83L40.153 45.712z"/><mask id="a" width="48" height="47" x="14" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M40.047 45.71c-.663.843-2.02.374-2.02-.699V34.708a2.26 2.26 0 0 0-2.262-2.262H24.389c-.92 0-1.457-1.04-.92-1.788l7.479-10.472c1.07-1.497 0-3.578-1.842-3.578H15.34c-.92 0-1.456-1.04-.92-1.788l9.696-13.575c.213-.297.556-.474.92-.474H53.93c.92 0 1.456 1.04.92 1.788L47.37 13.03c-1.07 1.498 0 3.578 1.842 3.578h11.376c.944 0 1.474 1.088.89 1.831L40.049 45.712z"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#eee6ff" rx="5.508" ry="14.704" transform="rotate(269.814 20.96 11.29)scale(-1 1)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#eee6ff" rx="10.399" ry="29.851" transform="rotate(89.814 -16.902 -8.275)scale(1 -1)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#8900ff" rx="5.508" ry="30.487" transform="rotate(89.814 -19.197 -7.127)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#8900ff" rx="5.508" ry="30.599" transform="rotate(89.814 -25.928 4.177)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#8900ff" rx="5.508" ry="30.599" transform="rotate(89.814 -25.738 5.52)scale(1 -1)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#eee6ff" rx="14.072" ry="22.078" transform="rotate(93.35 31.245 55.578)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#8900ff" rx="3.47" ry="21.501" transform="rotate(89.009 35.419 55.202)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#8900ff" rx="3.47" ry="21.501" transform="rotate(89.009 35.419 55.202)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx="14.592" cy="9.743" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(39.51 14.592 9.743)"/></g><g filter="url(#k)"><ellipse cx="61.728" cy="-5.321" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 61.728 -5.32)"/></g><g filter="url(#l)"><ellipse cx="55.618" cy="7.104" fill="#00c2ff" rx="5.971" ry="9.665" transform="rotate(37.892 55.618 7.104)"/></g><g filter="url(#m)"><ellipse cx="12.326" cy="39.103" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 12.326 39.103)"/></g><g filter="url(#n)"><ellipse cx="12.326" cy="39.103" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 12.326 39.103)"/></g><g filter="url(#o)"><ellipse cx="49.857" cy="30.678" fill="#8900ff" rx="4.407" ry="29.108" transform="rotate(37.892 49.857 30.678)"/></g><g filter="url(#p)"><ellipse cx="52.623" cy="33.171" fill="#00c2ff" rx="5.971" ry="15.297" transform="rotate(37.892 52.623 33.17)"/></g></g><path d="M6.919 0c-9.198 13.166-9.252 33.575 0 46.789h6.215c-9.25-13.214-9.196-33.623 0-46.789zm62.424 0h-6.215c9.198 13.166 9.252 33.575 0 46.789h6.215c9.25-13.214 9.196-33.623 0-46.789" class="parenthesis"/><defs><filter id="b" width="60.045" height="41.654" x="-5.564" y="16.92" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-40.407" y="-6.762" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-35.435" y="2.801" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-30.84" y="20.8" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-29.307" y="21.949" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="29.961" y="-17.13" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="37.754" y="3.055" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="37.754" y="3.055" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-13.43" y="-22.082" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="34.321" y="-37.644" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="38.847" y="-10.552" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-15.081" y="6.78" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-15.081" y="6.78" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="22.45" y="-1.645" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="32.919" y="11.36" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17286" stdDeviation="4.596"/></filter></defs></svg>
+</file>
+
+<file path="src/Formulario.jsx">
+import { useState } from 'react'
+import { supabase } from './supabase'
+
+function gerarCodigo() {
+  return Math.random().toString(36).substring(2, 10).toUpperCase()
+}
+
+async function enviarEmail(para, nome, codigo, tipo, nomeAluno) {
+  await fetch('https://mngrfqkavgoybxvttpuw.supabase.co/functions/v1/enviar-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uZ3JmcWthdmdveWJ4dnR0cHV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjcyNjQsImV4cCI6MjA5NjU0MzI2NH0.M28L-G-Gz6MR5D2k9tnQIrBAviAf0c4BGs1Ay_9dRpU`
+    },
+    body: JSON.stringify({ para, nome, codigo, tipo, nomeAluno })
+  })
+}
+
+function validarCPF(cpf) {
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false
+  let soma = 0
+  for (let i = 0; i < 9; i++) soma += parseInt(cpf[i]) * (10 - i)
+  let resto = (soma * 10) % 11
+  if (resto === 10 || resto === 11) resto = 0
+  if (resto !== parseInt(cpf[9])) return false
+  soma = 0
+  for (let i = 0; i < 10; i++) soma += parseInt(cpf[i]) * (11 - i)
+  resto = (soma * 10) % 11
+  if (resto === 10 || resto === 11) resto = 0
+  return resto === parseInt(cpf[10])
+}
+
+function aplicarMascara(valor) {
+  const n = valor.replace(/\D/g, '').slice(0, 11)
+  if (n.length > 9) return n.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4')
+  if (n.length > 6) return n.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3')
+  if (n.length > 3) return n.replace(/(\d{3})(\d{1,3})/, '$1.$2')
+  return n
+}
+
+export default function Formulario() {
+  const [form, setForm] = useState({ nome: '', email: '', cpf: '', curso: '' })
+  const [convidados, setConvidados] = useState([{ nome: '', email: '' }])
+  const [enviando, setEnviando] = useState(false)
+  const [sucesso, setSucesso] = useState(false)
+  const [erro, setErro] = useState('')
+
+  function atualizarConvidado(i, campo, valor) {
+    const novos = [...convidados]
+    novos[i][campo] = valor
+    setConvidados(novos)
+  }
+
+  async function enviar() {
+    if (!form.nome || !form.email || !form.cpf || !form.curso) {
+      setErro('Preencha todos os campos obrigatórios.')
+      return
+    }
+    const cpfLimpo = form.cpf.replace(/\D/g, '')
+    if (cpfLimpo.length !== 11) {
+      setErro('CPF incompleto. Digite os 11 dígitos.')
+      return
+    }
+    if (!validarCPF(cpfLimpo)) {
+      setErro('CPF inválido. Verifique e tente novamente.')
+      return
+    }
+    setErro('')
+    setEnviando(true)
+    try {
+      const codigoAluno = gerarCodigo()
+      const { error } = await supabase.from('convites').insert({
+        codigo: codigoAluno, nome: form.nome, email: form.email,
+        cpf: cpfLimpo, curso: form.curso, tipo: 'aluno', convidado_de: null
+      })
+      if (error) {
+        if (error.code === '23505') {
+          setErro('Este CPF já possui inscrição. Cada aluno pode se inscrever apenas uma vez. Se acredita que é um erro, entre em contato com a organização.')
+        } else {
+          setErro('Erro ao enviar. Tente novamente.')
+        }
+        setEnviando(false)
+        return
+      }
+      await enviarEmail(form.email, form.nome, codigoAluno, 'aluno', form.nome)
+
+      for (const c of convidados.filter(c => c.nome.trim() && c.email.includes('@'))) {
+        const cod = gerarCodigo()
+        const { error: e } = await supabase.from('convites').insert({
+          codigo: cod, nome: c.nome.trim(), email: c.email.trim(),
+          cpf: null, curso: null, tipo: 'convidado', convidado_de: form.nome
+        })
+        if (!e) await enviarEmail(c.email.trim(), c.nome.trim(), cod, 'convidado', form.nome)
+      }
+      setSucesso(true)
+    } catch (e) {
+      setErro('Erro ao enviar. Tente novamente.')
+      console.error(e)
+    }
+    setEnviando(false)
+  }
+
+  if (sucesso) return (
+    <div style={s.page}>
+      <div style={s.card}>
+        <div style={{fontSize:60,textAlign:'center'}}>🎉</div>
+        <h2 style={s.titulo}>Inscrição confirmada!</h2>
+        <p style={{textAlign:'center',color:'#555'}}>Você e seus convidados receberão o QR Code por email em instantes.</p>
+      </div>
+    </div>
+  )
+
+  return (
+    <div style={s.page}>
+      <div style={s.card}>
+        <h2 style={s.titulo}>🌽 Festa Junina UniEnsino 2026</h2>
+        <p style={s.sub}>Preencha seus dados para confirmar presença</p>
+
+        <label style={s.label}>Nome completo *</label>
+        <input style={s.input} value={form.nome}
+          onChange={e => setForm({...form, nome: e.target.value})} />
+
+        <label style={s.label}>Email *</label>
+        <input style={s.input} type="email" value={form.email}
+          onChange={e => setForm({...form, email: e.target.value})} />
+
+        <label style={s.label}>CPF *</label>
+        <input style={s.input} value={form.cpf}
+          onChange={e => setForm({...form, cpf: aplicarMascara(e.target.value)})}
+          placeholder="000.000.000-00" maxLength={14} inputMode="numeric" />
+
+        <label style={s.label}>Curso e período *</label>
+        <input style={s.input} value={form.curso}
+          onChange={e => setForm({...form, curso: e.target.value})}
+          placeholder="Ex: ADS – 1º período" />
+
+        <div style={{marginTop:24,marginBottom:8,borderTop:'1px solid #e5e7eb',paddingTop:16}}>
+          <strong style={{color:'#92400e'}}>Convidados</strong>
+          <span style={{fontSize:12,color:'#888',marginLeft:8}}>opcional — sem limite</span>
+        </div>
+
+        {convidados.map((c, i) => (
+          <div key={i} style={{background:'#fff3e0',borderRadius:8,padding:12,marginBottom:10}}>
+            <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+              <span style={{fontWeight:'bold',color:'#78350f'}}>Convidado {i+1}</span>
+              {convidados.length > 1 && (
+                <button onClick={() => setConvidados(convidados.filter((_,idx)=>idx!==i))}
+                  style={s.btnRemover}>✕</button>
+              )}
+            </div>
+            <input style={s.input} placeholder="Nome completo" value={c.nome}
+              onChange={e => atualizarConvidado(i,'nome',e.target.value)} />
+            <input style={s.input} placeholder="Email" type="email" value={c.email}
+              onChange={e => atualizarConvidado(i,'email',e.target.value)} />
+          </div>
+        ))}
+
+        <button onClick={() => setConvidados([...convidados,{nome:'',email:''}])}
+          style={s.btnAdicionar}>+ Adicionar convidado</button>
+
+        {erro && <p style={{color:'#991b1b',marginTop:10,fontSize:14,padding:8,background:'#fee2e2',borderRadius:6}}>{erro}</p>}
+
+        <button onClick={enviar} disabled={enviando}
+          style={{...s.btnEnviar, opacity:enviando?0.7:1}}>
+          {enviando ? '⏳ Enviando...' : '✅ Confirmar inscrição'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+const s = {
+  page:{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20},
+  card:{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:500,boxShadow:'0 4px 20px rgba(0,0,0,.08)'},
+  titulo:{color:'#92400e',textAlign:'center',marginBottom:6},
+  sub:{textAlign:'center',color:'#78350f',fontSize:14,marginBottom:20},
+  label:{display:'block',fontWeight:'bold',color:'#555',marginBottom:4,marginTop:12},
+  input:{width:'100%',padding:10,border:'1px solid #d97706',borderRadius:6,fontSize:15,marginBottom:4,boxSizing:'border-box'},
+  btnEnviar:{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer',marginTop:20},
+  btnAdicionar:{width:'100%',padding:10,background:'#fff3e0',color:'#92400e',border:'2px dashed #d97706',borderRadius:8,fontSize:15,cursor:'pointer',marginTop:4},
+  btnRemover:{background:'none',border:'none',color:'#ef4444',cursor:'pointer',fontWeight:'bold',fontSize:16}
+}
+</file>
+
+<file path="src/index.css">
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #fff8e1; min-height: 100vh; }
+</file>
+
+<file path="src/main.jsx">
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Formulario from './Formulario'
+import Portaria from './Portaria'
+import Admin from './Admin'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Formulario />} />
+      <Route path="/portaria" element={<Portaria />} />
+      <Route path="/admin" element={<Admin />} />
+    </Routes>
+  </BrowserRouter>
+)
+</file>
+
+<file path="src/Portaria.jsx">
+import { useState, useRef, useEffect } from 'react'
+import { Html5Qrcode } from 'html5-qrcode'
+import { supabase } from './supabase'
+
+export default function Portaria() {
+  const [codigo, setCodigo] = useState('')
+  const [resultado, setResultado] = useState(null)
+  const [carregando, setCarregando] = useState(false)
+  const [scannerAtivo, setScannerAtivo] = useState(false)
+  const [scannerStarting, setScannerStarting] = useState(false)
+  const [scannerErro, setScannerErro] = useState('')
+  const [scannerStatus, setScannerStatus] = useState('')
+  const html5QrcodeRef = useRef(null)
+  const scannerStartingRef = useRef(false)
+  const timeoutRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      stopScanner()
+    }
+  }, [])
+
+  async function validarCodigo(cod) {
+    const codigoFinal = cod.trim().toUpperCase()
+    if (!codigoFinal) return
+    setCarregando(true)
+    setResultado(null)
+    const { data, error } = await supabase
+      .from('convites').select('*')
+      .eq('codigo', codigoFinal).single()
+
+    if (error || !data) {
+      setResultado({ status: 'invalido' })
+    } else if (data.usado_em) {
+      setResultado({ status: 'ja_usado', nome: data.nome, tipo: data.tipo, usado_em: new Date(data.usado_em).toLocaleString('pt-BR') })
+    } else {
+      await supabase.from('convites').update({ usado_em: new Date() }).eq('codigo', codigoFinal)
+      setResultado({ status: 'ok', nome: data.nome, tipo: data.tipo, convidado_de: data.convidado_de })
+    }
+    setCodigo('')
+    setCarregando(false)
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setResultado(null), 6000)
+  }
+
+  async function startScanner() {
+    setScannerErro('')
+    if (scannerAtivo || scannerStarting) return
+    setScannerStatus('Abrindo câmera...')
+    scannerStartingRef.current = true
+    setScannerStarting(true)
+  }
+
+  useEffect(() => {
+    if (!scannerStarting) return
+
+    async function initScanner() {
+      try {
+        const cameras = await Html5Qrcode.getCameras()
+        if (!scannerStartingRef.current) return
+
+        if (!cameras || cameras.length === 0) {
+          setScannerErro('Nenhuma câmera encontrada.')
+          setScannerStarting(false)
+          scannerStartingRef.current = false
+          setScannerStatus('')
+          return
+        }
+
+        const preferredCamera = cameras.find(cam => /back|rear|environment|traseira/i.test(cam.label)) || cameras[0]
+        const cameraId = preferredCamera?.id
+        const cameraConfig = cameraId
+          ? cameraId
+          : { facingMode: { exact: 'environment' } }
+        const html5QrCode = new Html5Qrcode('qr-reader')
+        html5QrcodeRef.current = html5QrCode
+
+        if (!scannerStartingRef.current) return
+
+        await html5QrCode.start(
+          cameraConfig,
+          { fps: 10, qrbox: 250 },
+          decodedText => {
+            stopScanner()
+            validarCodigo(decodedText)
+          },
+          errorMessage => {
+            console.debug('QR scan error:', errorMessage)
+          }
+        )
+
+        if (!scannerStartingRef.current) return
+
+        setScannerAtivo(true)
+        setScannerStatus('Aponte a câmera para o QR Code')
+      } catch (error) {
+        const mensagem = error?.message || String(error)
+        setScannerErro(`Não foi possível iniciar a câmera: ${mensagem}`)
+        setScannerStatus('')
+      } finally {
+        setScannerStarting(false)
+        scannerStartingRef.current = false
+      }
+    }
+
+    initScanner()
+  }, [scannerStarting])
+
+  async function stopScanner() {
+    setScannerStatus('')
+    scannerStartingRef.current = false
+    setScannerStarting(false)
+    const instance = html5QrcodeRef.current
+    if (instance) {
+      try {
+        await instance.stop()
+      } catch (error) {
+        console.warn('Erro ao parar scanner', error)
+      }
+      instance.clear().catch(() => {})
+      html5QrcodeRef.current = null
+    }
+    setScannerAtivo(false)
+  }
+
+  const cores = {
+    ok:       { bg:'#d1fae5', cor:'#065f46', borda:'#10b981', icone:'✅', msg:'ENTRADA LIBERADA' },
+    ja_usado: { bg:'#fef3c7', cor:'#92400e', borda:'#f59e0b', icone:'⚠️', msg:'CONVITE JÁ UTILIZADO' },
+    invalido: { bg:'#fee2e2', cor:'#991b1b', borda:'#ef4444', icone:'❌', msg:'CONVITE INVÁLIDO' }
+  }
+
+  return (
+    <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:'#fff8e1'}}>
+      <div style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:420,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
+        <h2 style={{color:'#92400e',marginBottom:4}}>🎪 Portaria</h2>
+        <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Festa Junina UniEnsino 2026</p>
+
+        <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center',marginBottom:18}}>
+          <button onClick={startScanner}
+            disabled={scannerAtivo || scannerStarting}
+            style={{padding:'12px 18px',background:'#10b981',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:'bold'}}>
+            📷 Usar câmera
+          </button>
+          <button onClick={stopScanner}
+            disabled={!scannerAtivo && !scannerStarting}
+            style={{padding:'12px 18px',background:'#ef4444',color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:'bold'}}>
+            ✕ Parar câmera
+          </button>
+        </div>
+
+        {scannerErro && <p style={{color:'#991b1b',marginBottom:12}}>{scannerErro}</p>}
+        {scannerStatus && !scannerErro && <p style={{color:'#065f46',marginBottom:12}}>{scannerStatus}</p>}
+
+        {(scannerAtivo || scannerStarting) && (
+          <div style={{margin:'0 auto 20px',width:'100%',maxWidth:420,border:'2px solid #d97706',borderRadius:12,overflow:'hidden'}}>
+            <div id="qr-reader" style={{width:'100%',minHeight:320,background:'#000'}} />
+          </div>
+        )}
+
+        <input value={codigo}
+          onChange={e => setCodigo(e.target.value.toUpperCase())}
+          onKeyDown={e => e.key === 'Enter' && validarCodigo(codigo)}
+          placeholder="CÓDIGO DO CONVITE"
+          style={{width:'100%',padding:14,fontSize:22,border:'2px solid #d97706',borderRadius:8,textAlign:'center',letterSpacing:4,fontWeight:'bold',marginBottom:12,boxSizing:'border-box'}}
+          autoFocus={!scannerAtivo} />
+
+        <button onClick={() => validarCodigo(codigo)} disabled={carregando}
+          style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer'}}>
+          {carregando ? 'Verificando...' : '✅ Validar Convite'}
+        </button>
+
+        {resultado && (() => {
+          const c = cores[resultado.status]
+          return (
+            <div style={{marginTop:20,padding:20,borderRadius:10,background:c.bg,border:`2px solid ${c.borda}`,color:c.cor}}>
+              <div style={{fontSize:40}}>{c.icone}</div>
+              <div style={{fontSize:20,fontWeight:'bold',marginTop:4}}>{c.msg}</div>
+              {resultado.nome && <div style={{fontSize:16,fontWeight:'bold',marginTop:6}}>{resultado.nome}</div>}
+              {resultado.tipo === 'convidado' && <div style={{fontSize:13,marginTop:2}}>Convidado de {resultado.convidado_de}</div>}
+              {resultado.tipo === 'aluno' && <div style={{fontSize:13,marginTop:2}}>🎓 Aluno</div>}
+              {resultado.usado_em && <div style={{fontSize:12,marginTop:4}}>Usado em: {resultado.usado_em}</div>}
+              <div style={{fontSize:11,color:'#888',marginTop:8}}>Esta mensagem desaparece em 6 segundos</div>
+            </div>
+          )
+        })()}
+      </div>
+    </div>
+  )
+}
+</file>
+
+<file path="src/supabase.js">
+import { createClient } from '@supabase/supabase-js'
+export const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+)
+</file>
+
+<file path="supabase/.gitignore">
+# Supabase
+.branches
+.temp
+
+# dotenvx
+.env.keys
+.env.local
+.env.*.local
+</file>
+
+<file path="supabase/config.toml">
+# For detailed configuration reference documentation, visit:
+# https://supabase.com/docs/guides/local-development/cli/config
+# A string used to distinguish different Supabase projects on the same host. Defaults to the
+# working directory name when running `supabase init`.
+project_id = "festa-junina"
+
+[api]
+enabled = true
+# Port to use for the API URL.
+port = 54321
+# Schemas to expose in your API. Tables, views and stored procedures in this schema will get API
+# endpoints. `public` and `graphql_public` schemas are included by default.
+schemas = ["public", "graphql_public"]
+# Extra schemas to add to the search_path of every request.
+extra_search_path = ["public", "extensions"]
+# The maximum number of rows returns from a view, table, or stored procedure. Limits payload size
+# for accidental or malicious requests.
+max_rows = 1000
+# Controls whether new tables, views, sequences and functions created in the `public` schema by
+# `postgres` are reachable through the Data API roles (`anon`, `authenticated`, `service_role`)
+# without explicit GRANTs. Leave unset today to preserve local behaviour. The implicit default
+# flips to `false` on 2026-05-30 to match the new cloud default, and the field is removed in
+# 2026-10-30 once the always-revoked behaviour is permanent. Set to `false` to opt in early.
+# auto_expose_new_tables = false
+
+[api.tls]
+# Enable HTTPS endpoints locally using a self-signed certificate.
+enabled = false
+# Paths to self-signed certificate pair.
+# cert_path = "../certs/my-cert.pem"
+# key_path = "../certs/my-key.pem"
+
+[db]
+# Port to use for the local database URL.
+port = 54322
+# Port used by db diff command to initialize the shadow database.
+shadow_port = 54320
+# Maximum amount of time to wait for health check when starting the local database.
+health_timeout = "2m"
+# The database major version to use. This has to be the same as your remote database's. Run `SHOW
+# server_version;` on the remote database to check.
+major_version = 17
+
+[db.pooler]
+enabled = false
+# Port to use for the local connection pooler.
+port = 54329
+# Specifies when a server connection can be reused by other clients.
+# Configure one of the supported pooler modes: `transaction`, `session`.
+pool_mode = "transaction"
+# How many server connections to allow per user/database pair.
+default_pool_size = 20
+# Maximum number of client connections allowed.
+max_client_conn = 100
+
+# [db.vault]
+# secret_key = "env(SECRET_VALUE)"
+
+[db.migrations]
+# If disabled, migrations will be skipped during a db push or reset.
+enabled = true
+# Specifies an ordered list of schema files that describe your database.
+# Supports glob patterns relative to supabase directory: "./schemas/*.sql"
+schema_paths = []
+
+[db.seed]
+# If enabled, seeds the database after migrations during a db reset.
+enabled = true
+# Specifies an ordered list of seed files to load during db reset.
+# Supports glob patterns relative to supabase directory: "./seeds/*.sql"
+sql_paths = ["./seed.sql"]
+
+[db.network_restrictions]
+# Enable management of network restrictions.
+enabled = false
+# List of IPv4 CIDR blocks allowed to connect to the database.
+# Defaults to allow all IPv4 connections. Set empty array to block all IPs.
+allowed_cidrs = ["0.0.0.0/0"]
+# List of IPv6 CIDR blocks allowed to connect to the database.
+# Defaults to allow all IPv6 connections. Set empty array to block all IPs.
+allowed_cidrs_v6 = ["::/0"]
+
+# Uncomment to reject non-secure connections to the database.
+# [db.ssl_enforcement]
+# enabled = true
+
+[realtime]
+enabled = true
+# Bind realtime via either IPv4 or IPv6. (default: IPv4)
+# ip_version = "IPv6"
+# The maximum length in bytes of HTTP request headers. (default: 4096)
+# max_header_length = 4096
+
+[studio]
+enabled = true
+# Port to use for Supabase Studio.
+port = 54323
+# External URL of the API server that frontend connects to.
+api_url = "http://127.0.0.1"
+# OpenAI API Key to use for Supabase AI in the Supabase Studio.
+openai_api_key = "env(OPENAI_API_KEY)"
+
+# Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
+# are monitored, and you can view the emails that would have been sent from the web interface.
+[inbucket]
+enabled = true
+# Port to use for the email testing server web interface.
+port = 54324
+# Uncomment to expose additional ports for testing user applications that send emails.
+# smtp_port = 54325
+# pop3_port = 54326
+# admin_email = "admin@email.com"
+# sender_name = "Admin"
+
+[storage]
+enabled = true
+# The maximum file size allowed (e.g. "5MB", "500KB").
+file_size_limit = "50MiB"
+
+# Uncomment to configure local storage buckets
+# [storage.buckets.images]
+# public = false
+# file_size_limit = "50MiB"
+# allowed_mime_types = ["image/png", "image/jpeg"]
+# objects_path = "./images"
+
+# Allow connections via S3 compatible clients
+[storage.s3_protocol]
+enabled = true
+
+# Image transformation API is available to Supabase Pro plan.
+# [storage.image_transformation]
+# enabled = true
+
+# Store analytical data in S3 for running ETL jobs over Iceberg Catalog
+# This feature is only available on the hosted platform.
+[storage.analytics]
+enabled = false
+max_namespaces = 5
+max_tables = 10
+max_catalogs = 2
+
+# Analytics Buckets is available to Supabase Pro plan.
+# [storage.analytics.buckets.my-warehouse]
+
+# Store vector embeddings in S3 for large and durable datasets
+[storage.vector]
+enabled = true
+max_buckets = 10
+max_indexes = 5
+
+# Vector Buckets is available to Supabase Pro plan.
+# [storage.vector.buckets.documents-openai]
+
+[auth]
+enabled = true
+# The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
+# in emails.
+site_url = "http://127.0.0.1:3000"
+# The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
+# external_url = ""
+# A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
+additional_redirect_urls = ["https://127.0.0.1:3000"]
+# How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
+jwt_expiry = 3600
+# JWT issuer URL. If not set, defaults to auth.external_url.
+# jwt_issuer = ""
+# Path to JWT signing key. DO NOT commit your signing keys file to git.
+# signing_keys_path = "./signing_keys.json"
+# If disabled, the refresh token will never expire.
+enable_refresh_token_rotation = true
+# Allows refresh tokens to be reused after expiry, up to the specified interval in seconds.
+# Requires enable_refresh_token_rotation = true.
+refresh_token_reuse_interval = 10
+# Allow/disallow new user signups to your project.
+enable_signup = true
+# Allow/disallow anonymous sign-ins to your project.
+enable_anonymous_sign_ins = false
+# Allow/disallow testing manual linking of accounts
+enable_manual_linking = false
+# Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
+minimum_password_length = 6
+# Passwords that do not meet the following requirements will be rejected as weak. Supported values
+# are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
+password_requirements = ""
+
+# Configure passkey sign-ins.
+# [auth.passkey]
+# enabled = false
+
+# Configure WebAuthn relying party settings (required when passkey is enabled).
+# [auth.webauthn]
+# rp_display_name = "Supabase"
+# rp_id = "localhost"
+# rp_origins = ["http://127.0.0.1:3000"]
+
+[auth.rate_limit]
+# Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
+email_sent = 2
+# Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
+sms_sent = 30
+# Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
+anonymous_users = 30
+# Number of sessions that can be refreshed in a 5 minute interval per IP address.
+token_refresh = 150
+# Number of sign up and sign-in requests that can be made in a 5 minute interval per IP address (excludes anonymous users).
+sign_in_sign_ups = 30
+# Number of OTP / Magic link verifications that can be made in a 5 minute interval per IP address.
+token_verifications = 30
+# Number of Web3 logins that can be made in a 5 minute interval per IP address.
+web3 = 30
+
+# Configure one of the supported captcha providers: `hcaptcha`, `turnstile`.
+# [auth.captcha]
+# enabled = true
+# provider = "hcaptcha"
+# secret = ""
+
+[auth.email]
+# Allow/disallow new user signups via email to your project.
+enable_signup = true
+# If enabled, a user will be required to confirm any email change on both the old, and new email
+# addresses. If disabled, only the new email is required to confirm.
+double_confirm_changes = true
+# If enabled, users need to confirm their email address before signing in.
+enable_confirmations = false
+# If enabled, users will need to reauthenticate or have logged in recently to change their password.
+secure_password_change = false
+# Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
+max_frequency = "1s"
+# Number of characters used in the email OTP.
+otp_length = 6
+# Number of seconds before the email OTP expires (defaults to 1 hour).
+otp_expiry = 3600
+
+# Use a production-ready SMTP server
+# [auth.email.smtp]
+# enabled = true
+# host = "smtp.sendgrid.net"
+# port = 587
+# user = "apikey"
+# pass = "env(SENDGRID_API_KEY)"
+# admin_email = "admin@email.com"
+# sender_name = "Admin"
+
+# Uncomment to customize email template
+# [auth.email.template.invite]
+# subject = "You have been invited"
+# content_path = "./supabase/templates/invite.html"
+
+# Uncomment to customize notification email template
+# [auth.email.notification.password_changed]
+# enabled = true
+# subject = "Your password has been changed"
+# content_path = "./templates/password_changed_notification.html"
+
+[auth.sms]
+# Allow/disallow new user signups via SMS to your project.
+enable_signup = false
+# If enabled, users need to confirm their phone number before signing in.
+enable_confirmations = false
+# Template for sending OTP to users
+template = "Your code is {{ `{{ .Code }}` }}"
+# Controls the minimum amount of time that must pass before sending another sms otp.
+max_frequency = "5s"
+
+# Use pre-defined map of phone number to OTP for testing.
+# [auth.sms.test_otp]
+# 4152127777 = "123456"
+
+# Configure logged in session timeouts.
+# [auth.sessions]
+# Force log out after the specified duration.
+# timebox = "24h"
+# Force log out if the user has been inactive longer than the specified duration.
+# inactivity_timeout = "8h"
+
+# This hook runs before a new user is created and allows developers to reject the request based on the incoming user object.
+# [auth.hook.before_user_created]
+# enabled = true
+# uri = "pg-functions://postgres/auth/before-user-created-hook"
+
+# This hook runs before a token is issued and allows you to add additional claims based on the authentication method used.
+# [auth.hook.custom_access_token]
+# enabled = true
+# uri = "pg-functions://<database>/<schema>/<hook_name>"
+
+# Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
+[auth.sms.twilio]
+enabled = false
+account_sid = ""
+message_service_sid = ""
+# DO NOT commit your Twilio auth token to git. Use environment variable substitution instead:
+auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
+
+# Multi-factor-authentication is available to Supabase Pro plan.
+[auth.mfa]
+# Control how many MFA factors can be enrolled at once per user.
+max_enrolled_factors = 10
+
+# Control MFA via App Authenticator (TOTP)
+[auth.mfa.totp]
+enroll_enabled = false
+verify_enabled = false
+
+# Configure MFA via Phone Messaging
+[auth.mfa.phone]
+enroll_enabled = false
+verify_enabled = false
+otp_length = 6
+template = "Your code is {{ `{{ .Code }}` }}"
+max_frequency = "5s"
+
+# Configure MFA via WebAuthn
+# [auth.mfa.web_authn]
+# enroll_enabled = true
+# verify_enabled = true
+
+# Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
+# `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
+# `twitter`, `x`, `slack`, `spotify`, `workos`, `zoom`.
+[auth.external.apple]
+enabled = false
+client_id = ""
+# DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
+secret = "env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)"
+# Overrides the default auth callback URL derived from auth.external_url.
+redirect_uri = ""
+# Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,
+# or any other third-party OIDC providers.
+url = ""
+# If enabled, the nonce check will be skipped. Required for local sign in with Google auth.
+skip_nonce_check = false
+# If enabled, it will allow the user to successfully authenticate when the provider does not return an email address.
+email_optional = false
+
+# Allow Solana wallet holders to sign in to your project via the Sign in with Solana (SIWS, EIP-4361) standard.
+# You can configure "web3" rate limit in the [auth.rate_limit] section and set up [auth.captcha] if self-hosting.
+[auth.web3.solana]
+enabled = false
+
+# Use Firebase Auth as a third-party provider alongside Supabase Auth.
+[auth.third_party.firebase]
+enabled = false
+# project_id = "my-firebase-project"
+
+# Use Auth0 as a third-party provider alongside Supabase Auth.
+[auth.third_party.auth0]
+enabled = false
+# tenant = "my-auth0-tenant"
+# tenant_region = "us"
+
+# Use AWS Cognito (Amplify) as a third-party provider alongside Supabase Auth.
+[auth.third_party.aws_cognito]
+enabled = false
+# user_pool_id = "my-user-pool-id"
+# user_pool_region = "us-east-1"
+
+# Use Clerk as a third-party provider alongside Supabase Auth.
+[auth.third_party.clerk]
+enabled = false
+# Obtain from https://clerk.com/setup/supabase
+# domain = "example.clerk.accounts.dev"
+
+# OAuth server configuration
+[auth.oauth_server]
+# Enable OAuth server functionality
+enabled = false
+# Path for OAuth consent flow UI
+authorization_url_path = "/oauth/consent"
+# Allow dynamic client registration
+allow_dynamic_registration = false
+
+[edge_runtime]
+enabled = true
+# Supported request policies: `oneshot`, `per_worker`.
+# `per_worker` (default) — enables hot reload during local development.
+# `oneshot` — fallback mode if hot reload causes issues (e.g. in large repos or with symlinks).
+policy = "per_worker"
+# Port to attach the Chrome inspector for debugging edge functions.
+inspector_port = 8083
+# The Deno major version to use.
+deno_version = 2
+
+# [edge_runtime.secrets]
+# secret_key = "env(SECRET_VALUE)"
+
+[analytics]
+enabled = true
+port = 54327
+# Configure one of the supported backends: `postgres`, `bigquery`.
+backend = "postgres"
+
+# Experimental features may be deprecated any time
+[experimental]
+# Configures Postgres storage engine to use OrioleDB (S3)
+orioledb_version = ""
+# Configures S3 bucket URL, eg. <bucket_name>.s3-<region>.amazonaws.com
+s3_host = "env(S3_HOST)"
+# Configures S3 bucket region, eg. us-east-1
+s3_region = "env(S3_REGION)"
+# Configures AWS_ACCESS_KEY_ID for S3 bucket
+s3_access_key = "env(S3_ACCESS_KEY)"
+# Configures AWS_SECRET_ACCESS_KEY for S3 bucket
+s3_secret_key = "env(S3_SECRET_KEY)"
+
+# [experimental.pgdelta]
+# When enabled, pg-delta becomes the active engine for supported schema flows.
+# enabled = false
+# Directory under `supabase/` where declarative files are written.
+# declarative_schema_path = "./database"
+# JSON string passed through to pg-delta SQL formatting.
+# format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+[functions.enviar-email]
+enabled = true
+verify_jwt = false
+import_map = "./functions/enviar-email/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/enviar-email/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/enviar-email/*.html" ]
+</file>
+
+<file path="supabase/functions/enviar-email/.npmrc">
+# Configuration for private npm package dependencies
+# For more information on using private registries with Edge Functions, see:
+# https://supabase.com/docs/guides/functions/import-maps#importing-from-private-registries
+</file>
+
+<file path="supabase/functions/enviar-email/deno.json">
+{
+  "imports": {
+    "@supabase/functions-js": "jsr:@supabase/functions-js@^2",
+    "@supabase/server": "npm:@supabase/server@^1"
+  }
+}
+</file>
+
+<file path="supabase/functions/enviar-email/index.ts">
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
+  const { para, nome, codigo, tipo, nomeAluno } = await req.json()
+  const BREVO_KEY = Deno.env.get('BREVO_KEY')
+
+  const tipoLabel = tipo === 'aluno'
+    ? 'Sua inscrição foi confirmada.'
+    : `Você foi convidado(a) por <strong>${nomeAluno}</strong>.`
+
+  const htmlBody = `
+    <div style="font-family:Arial,sans-serif;max-width:500px;margin:auto;background:#fffbf0;border:2px solid #d97706;border-radius:14px;padding:28px;">
+      <h2 style="color:#92400e;text-align:center;">🌽 Festa Junina UniEnsino 2026</h2>
+      <p>Olá, <strong>${nome}</strong>! 🎉</p>
+      <p>${tipoLabel}</p>
+      <p>Apresente o código abaixo na portaria:</p>
+      <div style="background:#92400e;color:#fff;text-align:center;padding:16px;border-radius:8px;font-size:28px;letter-spacing:6px;font-weight:bold;margin:20px 0;">
+        ${codigo}
+      </div>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${codigo}" style="display:block;margin:0 auto;border:4px solid #92400e;border-radius:8px;" />
+      <p style="font-size:11px;color:#aaa;text-align:center;margin-top:16px;">Convite pessoal e intransferível. Uso único.</p>
+    </div>`
+
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': BREVO_KEY!,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      sender: { name: 'Festa Junina UniEnsino', email: 'douglas.kevin201@gmail.com' },
+      to: [{ email: para, name: nome }],
+      subject: '🌽 Seu convite – Festa Junina UniEnsino 2026',
+      htmlContent: htmlBody
+    })
+  })
+
+  const result = await res.json()
+  console.log('Brevo result:', JSON.stringify(result))
+
+  return new Response(JSON.stringify({ ok: true }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+  })
+})
+</file>
+
+<file path="vercel.json">
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
+</file>
+
+<file path="vite.config.js">
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})
+</file>
+
+</files>
