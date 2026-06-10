@@ -55,13 +55,16 @@ export default function Portaria() {
       }
 
       const preferredCamera = cameras.find(cam => /back|rear|environment|traseira/i.test(cam.label)) || cameras[0]
-      const cameraId = preferredCamera.id
+      const cameraId = preferredCamera?.id
+      const cameraConfig = cameraId
+        ? cameraId
+        : { facingMode: { exact: 'environment' } }
       const html5QrCode = new Html5Qrcode('qr-reader')
       html5QrcodeRef.current = html5QrCode
       setScannerStatus('Abrindo câmera...')
 
       await html5QrCode.start(
-        cameraId,
+        cameraConfig,
         { fps: 10, qrbox: 250 },
         decodedText => {
           stopScanner()
@@ -75,7 +78,8 @@ export default function Portaria() {
       setScannerAtivo(true)
       setScannerStatus('Aponte a câmera para o QR Code')
     } catch (error) {
-      setScannerErro('Não foi possível iniciar a câmera. Verifique a permissão e tente novamente.')
+      const mensagem = error?.message || String(error)
+      setScannerErro(`Não foi possível iniciar a câmera: ${mensagem}`)
       setScannerStatus('')
       console.error(error)
     }
