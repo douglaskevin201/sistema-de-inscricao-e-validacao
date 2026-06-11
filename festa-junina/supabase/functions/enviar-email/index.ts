@@ -13,6 +13,14 @@ serve(async (req) => {
   const { para, nome, codigo, tipo, nomeAluno } = await req.json()
   const BREVO_KEY = Deno.env.get('BREVO_KEY')
 
+  if (!BREVO_KEY) {
+    console.error('BREVO_KEY não está configurada')
+    return new Response(JSON.stringify({ ok: false, error: 'BREVO_KEY não configurada no servidor' }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+  }
+
   const tipoLabel = tipo === 'aluno'
     ? 'Sua inscrição foi confirmada.'
     : `Você foi convidado(a) por <strong>${nomeAluno}</strong>.`
@@ -46,6 +54,14 @@ serve(async (req) => {
 
   const result = await res.json()
   console.log('Brevo result:', JSON.stringify(result))
+
+  if (!res.ok) {
+    console.error('Erro ao enviar email via Brevo:', result)
+    return new Response(JSON.stringify({ ok: false, error: result }), {
+      status: res.status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+  }
 
   return new Response(JSON.stringify({ ok: true }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' }

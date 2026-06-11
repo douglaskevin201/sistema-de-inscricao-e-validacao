@@ -6,14 +6,11 @@ function gerarCodigo() {
 }
 
 async function enviarEmail(para, nome, codigo, tipo, nomeAluno) {
-  await fetch('https://mngrfqkavgoybxvttpuw.supabase.co/functions/v1/enviar-email', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uZ3JmcWthdmdveWJ4dnR0cHV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjcyNjQsImV4cCI6MjA5NjU0MzI2NH0.M28L-G-Gz6MR5D2k9tnQIrBAviAf0c4BGs1Ay_9dRpU`
-    },
-    body: JSON.stringify({ para, nome, codigo, tipo, nomeAluno })
+  const { error } = await supabase.functions.invoke('enviar-email', {
+    body: JSON.stringify({ para, nome, codigo, tipo, nomeAluno }),
+    headers: { 'Content-Type': 'application/json' }
   })
+  if (error) throw error
 }
 
 function validarCPF(cpf) {

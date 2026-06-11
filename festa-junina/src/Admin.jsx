@@ -1,24 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { supabase } from './supabase'
 
-const SENHA_ADMIN = 'festaadmin2026'
 const POR_PAGINA = 20
 
+async function validarSenhaAdmin(senha) {
+  const { data, error } = await supabase.functions.invoke('validar-admin', {
+    body: JSON.stringify({ senha }),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  if (error) throw error
+  return data?.ok === true
+
+}
+
 async function reenviarEmail(convite) {
-  await fetch('https://mngrfqkavgoybxvttpuw.supabase.co/functions/v1/enviar-email', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uZ3JmcWthdmdveWJ4dnR0cHV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjcyNjQsImV4cCI6MjA5NjU0MzI2NH0.M28L-G-Gz6MR5D2k9tnQIrBAviAf0c4BGs1Ay_9dRpU`
-    },
+  const { error } = await supabase.functions.invoke('enviar-email', {
     body: JSON.stringify({
       para: convite.email,
       nome: convite.nome,
       codigo: convite.codigo,
       tipo: convite.tipo,
       nomeAluno: convite.convidado_de || convite.nome
-    })
+    }),
+    headers: { 'Content-Type': 'application/json' }
   })
+  if (error) throw error
 }
 
 export default function Admin() {
@@ -40,11 +46,29 @@ export default function Admin() {
     setCarregando(false)
   }
 
-  useEffect(() => { if (autenticado) carregar() }, [autenticado])
+  const [autenticando, setAutenticando] = useState(false)
 
-  function login() {
-    if (senha === SENHA_ADMIN) setAutenticado(true)
-    else alert('Senha incorreta!')
+  async function login() {
+    if (!senha.trim()) {
+      alert('Digite a senha do admin.')
+      return
+    }
+
+    setAutenticando(true)
+    try {
+      const valid = await validarSenhaAdmin(senha)
+      if (valid) {
+        setAutenticado(true)
+        carregar()
+      } else {
+        alert('Senha incorreta!')
+      }
+    } catch (err) {
+      console.error('Erro ao validar senha admin:', err)
+      alert('Erro ao validar administrador. Tente novamente.')
+    } finally {
+      setAutenticando(false)
+    }
   }
 
   async function handleReenviar(convite) {
@@ -157,7 +181,9 @@ export default function Admin() {
           onChange={e => setSenha(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && login()}
           style={s.input} />
-        <button onClick={login} style={s.btnPrimario}>Entrar</button>
+        <button onClick={login} disabled={autenticando} style={{...s.btnPrimario, opacity: autenticando ? 0.7 : 1}}>
+          {autenticando ? 'Validando...' : 'Entrar'}
+        </button>
       </div>
     </div>
   )
