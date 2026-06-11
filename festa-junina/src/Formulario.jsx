@@ -7,8 +7,7 @@ function gerarCodigo() {
 
 async function enviarEmail(para, nome, codigo, tipo, nomeAluno) {
   const { error } = await supabase.functions.invoke('enviar-email', {
-    body: JSON.stringify({ para, nome, codigo, tipo, nomeAluno }),
-    headers: { 'Content-Type': 'application/json' }
+    body: { para, nome, codigo, tipo, nomeAluno }
   })
   if (error) throw error
 }
