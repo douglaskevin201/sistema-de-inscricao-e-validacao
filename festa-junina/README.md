@@ -254,5 +254,7 @@ Leitura de QR Code pela câmera pode ser instável em alguns dispositivos Androi
 
 👨‍💻 Desenvolvido por
 
+
 Kevin Douglas — Estudante de Análise e Desenvolvimento de Sistemas
+Emerson Castro - Estudante de Ciência da Computação
 UniEnsino — 2026
