@@ -213,7 +213,7 @@ export default function Formulario() {
           {convidadosEnviando ? '⏳ Enviando...' : '✅ Confirmar convidados'}
         </button>
 
-        <button onClick={() => { setAlunoExistente(null); setForm(f=>({...f,cpf:''})); setErro('') }}
+        <button onClick={() => { setAlunoExistente(null); setForm(f=>({...f,cpf:''})); setErro(''); setConvidados([{nome:'',email:''}]) }}
           style={{...s.btnAdicionar, marginTop:10}}>
           ← Voltar
         </button>
