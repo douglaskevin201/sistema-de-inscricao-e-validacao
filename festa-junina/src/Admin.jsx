@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import * as XLSX from 'xlsx' // Importa a biblioteca para gerar o arquivo .xlsx
+import * as XLSX from 'xlsx'
 import { supabase } from './supabase'
 
 const POR_PAGINA = 20
@@ -38,6 +38,7 @@ export default function Admin() {
   const [pagina, setPagina] = useState(1)
   const [reenviando, setReenviando] = useState(null)
   const [cancelando, setCancelando] = useState(null)
+  const [autenticando, setAutenticando] = useState(false)
 
   async function carregar() {
     setCarregando(true)
@@ -46,14 +47,11 @@ export default function Admin() {
     setCarregando(false)
   }
 
-  const [autenticando, setAutenticando] = useState(false)
-
   async function login() {
     if (!senha.trim()) {
       alert('Digite a senha do admin.')
       return
     }
-
     setAutenticando(true)
     try {
       const valid = await validarSenhaAdmin(senha)
@@ -105,13 +103,20 @@ export default function Admin() {
       }
     }
 
-    const { error } = await supabase
+    const { data: deletados, error } = await supabase
       .from('convites')
       .delete()
       .in('id', idsToDelete)
+      .select()
 
     if (error) {
       alert('Erro ao cancelar convite.')
+      setCancelando(null)
+      return
+    }
+
+    if (!deletados || deletados.length === 0) {
+      alert('Não foi possível excluir. Verifique as permissões no Supabase (RLS).')
       setCancelando(null)
       return
     }
@@ -122,7 +127,12 @@ export default function Admin() {
       setAlunoSelecionado('')
     }
 
-    alert(`Convite de ${convite.nome} cancelado com sucesso.`)
+    const totalConvidadosRemovidos = deletados.length - 1
+    const msgConvidados = totalConvidadosRemovidos > 0
+      ? ` e ${totalConvidadosRemovidos} convidado(s) removido(s).`
+      : '.'
+
+    alert(`Convite de ${convite.nome} cancelado com sucesso${msgConvidados}`)
     setCancelando(null)
   }
 
