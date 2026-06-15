@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import * as XLSX from 'xlsx' // Importa a biblioteca para gerar o arquivo .xlsx
 import { supabase } from './supabase'
 
 const POR_PAGINA = 20
@@ -10,7 +11,6 @@ async function validarSenhaAdmin(senha) {
   })
   if (error) throw error
   return data?.ok === true
-
 }
 
 async function reenviarEmail(convite) {
@@ -148,28 +148,73 @@ export default function Admin() {
   const total = convites.length
   const compareceram = convites.filter(c => c.usado_em).length
   const alunos = convites.filter(c => c.tipo === 'aluno').length
-  const convidados = convites.filter(c => c.tipo === 'convidado').length
+  const totalConvidados = convites.filter(c => c.tipo === 'convidado').length
   const alunosUnicos = Array.from(new Set(convites.filter(c => c.tipo === 'aluno').map(c => c.nome))).sort()
   const convidadosDoAluno = alunoSelecionado
     ? convites.filter(c => c.convidado_de === alunoSelecionado)
     : []
   const compareceramDoAluno = convidadosDoAluno.filter(c => c.usado_em).length
 
-  function exportarCSV() {
-    const header = ['Nome','Email','CPF','Curso','Tipo','Convidado de','Inscrito em','Compareceu']
-    const rows = filtrados.map(c => [
-      c.nome, c.email, c.cpf || '', c.curso || '',
-      c.tipo, c.convidado_de || '',
-      c.criado_em ? new Date(c.criado_em).toLocaleString('pt-BR') : '',
-      c.usado_em ? new Date(c.usado_em).toLocaleString('pt-BR') : 'Não'
-    ])
-    const csv = [header, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n')
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'inscritos-festa-junina.csv'
-    a.click()
+  function exportarExcelOrganizado() {
+    if (filtrados.length === 0) {
+      alert('Não há registros na tabela para exportar com os filtros atuais.')
+      return
+    }
+
+    const dadosResumo = [
+      { 'Indicador / Métrica': 'Total de Ingressos Gerados', 'Quantidade': total },
+      { 'Indicador / Métrica': 'Alunos Cadastrados', 'Quantidade': alunos },
+      { 'Indicador / Métrica': 'Convidados Cadastrados', 'Quantidade': totalConvidados },
+      { 'Indicador / Métrica': 'Público Presente (Confirmados)', 'Quantidade': compareceram },
+      { 'Indicador / Métrica': 'Ausentes', 'Quantidade': total - compareceram }
+    ]
+
+    const dadosAlunos = filtrados
+      .filter(c => c.tipo === 'aluno')
+      .map(c => ({
+        'Nome Completo': c.nome,
+        'E-mail': c.email,
+        'CPF': c.cpf ? c.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : '—',
+        'Curso / Período': c.curso || '—',
+        'Data de Inscrição': c.criado_em ? new Date(c.criado_em).toLocaleString('pt-BR') : '—',
+        'Compareceu': c.usado_em ? `Sim (${new Date(c.usado_em).toLocaleString('pt-BR')})` : 'Não'
+      }))
+
+    const dadosConvidados = filtrados
+      .filter(c => c.tipo === 'convidado')
+      .map(c => ({
+        'Nome do Convidado': c.nome,
+        'E-mail': c.email,
+        'Convidado de (Aluno)': c.convidado_de || '—',
+        'Data de Inscrição': c.criado_em ? new Date(c.criado_em).toLocaleString('pt-BR') : '—',
+        'Compareceu': c.usado_em ? `Sim (${new Date(c.usado_em).toLocaleString('pt-BR')})` : 'Não'
+      }))
+
+    const wsResumo = XLSX.utils.json_to_sheet(dadosResumo)
+    const wsAlunos = XLSX.utils.json_to_sheet(dadosAlunos)
+    const wsConvidados = XLSX.utils.json_to_sheet(dadosConvidados)
+
+    const autoAjustarColunas = (planilha, dadosJson) => {
+      if (!dadosJson || dadosJson.length === 0) return
+      const colunas = Object.keys(dadosJson[0])
+      planilha['!cols'] = colunas.map(key => ({
+        wch: Math.max(
+          key.length + 4,
+          ...dadosJson.map(item => (item[key] ? item[key].toString().length + 2 : 10))
+        )
+      }))
+    }
+
+    autoAjustarColunas(wsResumo, dadosResumo)
+    autoAjustarColunas(wsAlunos, dadosAlunos)
+    autoAjustarColunas(wsConvidados, dadosConvidados)
+
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, wsResumo, "Painel Geral")
+    XLSX.utils.book_append_sheet(workbook, wsAlunos, "Lista de Alunos")
+    XLSX.utils.book_append_sheet(workbook, wsConvidados, "Lista de Convidados")
+
+    XLSX.writeFile(workbook, "Relatorio_Festa_Junina_UniEnsino_2026.xlsx")
   }
 
   if (!autenticado) return (
@@ -195,7 +240,7 @@ export default function Admin() {
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20,flexWrap:'wrap',gap:8}}>
           <h2 style={{color:'#92400e'}}>🌽 Admin – Festa Junina 2026</h2>
           <div style={{display:'flex',gap:8}}>
-            <button onClick={exportarCSV} style={s.btnVerde}>📥 Exportar CSV</button>
+            <button onClick={exportarExcelOrganizado} style={s.btnVerde}>📥 Exportar Excel (.xlsx)</button>
             <button onClick={carregar} style={s.btnSecundario}>🔄 Atualizar</button>
           </div>
         </div>
@@ -206,7 +251,7 @@ export default function Admin() {
             {label:'Compareceram', valor:compareceram, cor:'#065f46'},
             {label:'Não vieram', valor:total-compareceram, cor:'#991b1b'},
             {label:'Alunos', valor:alunos, cor:'#1e40af'},
-            {label:'Convidados', valor:convidados, cor:'#6b21a8'},
+            {label:'Convidados', valor:totalConvidados, cor:'#6b21a8'},
             ...(alunoSelecionado ? [
               {label:`Convidados de ${alunoSelecionado}`, valor:convidadosDoAluno.length, cor:'#92400e'},
               {label:'Compareceram deste aluno', valor:compareceramDoAluno, cor:'#065f46'},
