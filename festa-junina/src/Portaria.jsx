@@ -4,7 +4,7 @@ import { supabase } from './supabase'
 
 export default function Portaria() {
   // --- CONFIGURAÇÃO DE ACESSO ---
-  const SENHA_CORRETA = 'FESTA2026' // Altere para a senha que desejar
+  const SENHA_CORRETA = 'FESTA2026'
   const [senhaInput, setSenhaInput] = useState('')
   const [autenticado, setAutenticado] = useState(false)
   const [erroSenha, setErroSenha] = useState(false)
