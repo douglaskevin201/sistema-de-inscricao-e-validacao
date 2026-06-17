@@ -3,6 +3,13 @@ import { Html5Qrcode } from 'html5-qrcode'
 import { supabase } from './supabase'
 
 export default function Portaria() {
+  // --- CONFIGURAÇÃO DE ACESSO ---
+  const SENHA_CORRETA = 'FESTA2026' // Altere para a senha que desejar
+  const [senhaInput, setSenhaInput] = useState('')
+  const [autenticado, setAutenticado] = useState(false)
+  const [erroSenha, setErroSenha] = useState(false)
+  // ------------------------------
+
   const [codigo, setCodigo] = useState('')
   const [resultado, setResultado] = useState(null)
   const [carregando, setCarregando] = useState(false)
@@ -20,6 +27,17 @@ export default function Portaria() {
       stopScanner()
     }
   }, [])
+
+  // Função para validar a senha da portaria
+  function verificarSenha(e) {
+    e.preventDefault()
+    if (senhaInput === SENHA_CORRETA) {
+      setAutenticado(true)
+      setErroSenha(false)
+    } else {
+      setErroSenha(true)
+    }
+  }
 
   async function validarCodigo(cod) {
     const codigoFinal = cod.trim().toUpperCase()
@@ -131,6 +149,34 @@ export default function Portaria() {
     invalido: { bg:'#fee2e2', cor:'#991b1b', borda:'#ef4444', icone:'❌', msg:'CONVITE INVÁLIDO' }
   }
 
+  // --- TELA DE LOGIN (Bloqueio) ---
+  if (!autenticado) {
+    return (
+      <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:'#fff8e1'}}>
+        <form onSubmit={verificarSenha} style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:420,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
+          <h2 style={{color:'#92400e',marginBottom:4}}>🔒 Acesso Restrito</h2>
+          <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Portaria - Festa Junina UniEnsino 2026</p>
+          
+          <input 
+            type="password"
+            value={senhaInput}
+            onChange={e => setSenhaInput(e.target.value)}
+            placeholder="DIGITE A SENHA DA PORTARIA"
+            style={{width:'100%',padding:14,fontSize:16,border:'2px solid #d97706',borderRadius:8,textAlign:'center',marginBottom:12,boxSizing:'border-box'}}
+            autoFocus 
+          />
+
+          {erroSenha && <p style={{color:'#991b1b',fontSize:14,marginBottom:12,fontWeight:'bold'}}>⚠️ Senha incorreta!</p>}
+
+          <button type="submit" style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer'}}>
+            Entrar na Portaria
+          </button>
+        </form>
+      </div>
+    )
+  }
+
+  // --- TELA DO SCANNER ORIGINAL (Só renderiza se autenticado for true) ---
   return (
     <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:'#fff8e1'}}>
       <div style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:420,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
