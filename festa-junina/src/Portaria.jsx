@@ -154,7 +154,7 @@ export default function Portaria() {
     return (
       <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:'#fff8e1'}}>
         <form onSubmit={verificarSenha} style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:420,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
-          <h2 style={{color:'#92400e',marginBottom:4}}>🔒 Acesso Restrito</h2>
+          <h2 style={{color:'#92400e',marginBottom:4}}>Acesso Restrito</h2>
           <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Portaria - Festa Junina UniEnsino 2026</p>
           
           <input 
@@ -166,7 +166,7 @@ export default function Portaria() {
             autoFocus 
           />
 
-          {erroSenha && <p style={{color:'#991b1b',fontSize:14,marginBottom:12,fontWeight:'bold'}}>⚠️ Senha incorreta!</p>}
+          {erroSenha && <p style={{color:'#991b1b',fontSize:14,marginBottom:12,fontWeight:'bold'}}>Senha incorreta!</p>}
 
           <button type="submit" style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer'}}>
             Entrar na Portaria
@@ -180,7 +180,7 @@ export default function Portaria() {
   return (
     <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:'#fff8e1'}}>
       <div style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:420,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
-        <h2 style={{color:'#92400e',marginBottom:4}}>🎪 Portaria</h2>
+        <h2 style={{color:'#92400e',marginBottom:4}}>Portaria</h2>
         <p style={{color:'#78350f',fontSize:13,marginBottom:22}}>Festa Junina UniEnsino 2026</p>
 
         <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center',marginBottom:18}}>
@@ -214,7 +214,7 @@ export default function Portaria() {
 
         <button onClick={() => validarCodigo(codigo)} disabled={carregando}
           style={{width:'100%',padding:14,background:'#92400e',color:'#fff',border:'none',borderRadius:8,fontSize:17,fontWeight:'bold',cursor:'pointer'}}>
-          {carregando ? 'Verificando...' : '✅ Validar Convite'}
+          {carregando ? 'Verificando...' : 'Validar Convite'}
         </button>
 
         {resultado && (() => {

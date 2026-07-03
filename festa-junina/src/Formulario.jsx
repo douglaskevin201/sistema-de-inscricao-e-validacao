@@ -201,7 +201,7 @@ export default function Formulario() {
   if (sucesso) return (
     <div style={s.page}>
       <div style={s.card}>
-        <div style={{fontSize:60,textAlign:'center'}}>🎉</div>
+        <div style={{fontSize:60,textAlign:'center'}}></div>
         <h2 style={s.titulo}>Inscrição confirmada!</h2>
         <p style={{textAlign:'center',color:'#555'}}>Você e seus convidados receberão o QR Code por email em instantes.</p>
       </div>
@@ -211,7 +211,7 @@ export default function Formulario() {
   if (convidadosSucesso) return (
     <div style={s.page}>
       <div style={s.card}>
-        <div style={{fontSize:60,textAlign:'center'}}>🎉</div>
+        <div style={{fontSize:60,textAlign:'center'}}></div>
         <h2 style={s.titulo}>Convidados adicionados!</h2>
         <p style={{textAlign:'center',color:'#555'}}>Seus convidados receberão o QR Code por email em instantes.</p>
       </div>
@@ -224,7 +224,7 @@ export default function Formulario() {
         <div style={{textAlign:'center',marginBottom:15}}>
           <img src={logo} alt="Logo UniEnsino" style={{maxWidth:'150px'}}/>
         </div>
-        <h2 style={s.titulo}>🌽 Festa Junina UniEnsino 2026</h2>
+        <h2 style={s.titulo}> Festa Junina UniEnsino 2026</h2>
         <div style={{background:'#d1fae5',border:'1px solid #6ee7b7',borderRadius:8,padding:14,marginBottom:20,textAlign:'center'}}>
           <p style={{margin:0,color:'#065f46',fontWeight:'bold'}}>✅ Você já está inscrito, {alunoExistente.nome.split(' ')[0]}!</p>
           <p style={{margin:'6px 0 0',color:'#047857',fontSize:14}}>Deseja adicionar convidados à sua inscrição?</p>
@@ -248,7 +248,7 @@ export default function Formulario() {
         <button onClick={() => setConvidados([...convidados,{nome:'',email:''}])} style={s.btnAdicionar}>+ Adicionar convidado</button>
         {erro && <p style={{color:'#991b1b',marginTop:10,fontSize:14,padding:8,background:'#fee2e2',borderRadius:6}}>{erro}</p>}
         <button onClick={adicionarConvidados} disabled={convidadosEnviando} style={{...s.btnEnviar,opacity:convidadosEnviando?0.7:1}}>
-          {convidadosEnviando ? '⏳ Enviando...' : '✅ Confirmar convidados'}
+          {convidadosEnviando ? ' Enviando...' : ' Confirmar convidados'}
         </button>
         <button onClick={() => { setAlunoExistente(null); setForm(f=>({...f,cpf:''})); setErro(''); setConvidados([{nome:'',email:''}]) }} style={{...s.btnAdicionar,marginTop:10}}>
           ← Voltar
@@ -263,7 +263,7 @@ export default function Formulario() {
         <div style={{textAlign:'center',marginBottom:15}}>
           <img src={logo} alt="Logo UniEnsino" style={{maxWidth:'180px'}}/>
         </div>
-        <h2 style={s.titulo}>🌽 Festa Junina UniEnsino 2026</h2>
+        <h2 style={s.titulo}> Festa Junina UniEnsino 2026</h2>
         <p style={s.sub}>Preencha seus dados para confirmar presença</p>
 
         <label style={s.label}>CPF *</label>
