@@ -230,7 +230,7 @@ export default function Admin() {
   if (!autenticado) return (
     <div style={s.page}>
       <div style={s.card}>
-        <h2 style={s.titulo}>🔐 Admin – Festa Junina</h2>
+        <h2 style={s.titulo}>Admin – Festa Junina</h2>
         <p style={{textAlign:'center',color:'#78350f',marginBottom:20}}>Acesso restrito</p>
         <input type="password" placeholder="Senha" value={senha}
           onChange={e => setSenha(e.target.value)}
