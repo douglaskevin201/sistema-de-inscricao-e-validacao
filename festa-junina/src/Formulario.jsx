@@ -302,7 +302,7 @@ export default function Formulario() {
         {erro && <p style={{color:'#991b1b',marginTop:10,fontSize:14,padding:8,background:'#fee2e2',borderRadius:6}}>{erro}</p>}
 
         <button onClick={enviar} disabled={enviando} style={{...s.btnEnviar,opacity:enviando?0.7:1}}>
-          {enviando ? '⏳ Enviando...' : '✅ Confirmar inscrição'}
+          {enviando ? 'Enviando...' : 'Confirmar inscrição'}
         </button>
       </div>
     </div>
