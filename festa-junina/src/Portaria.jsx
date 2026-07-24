@@ -3,8 +3,9 @@ import { Html5Qrcode } from 'html5-qrcode'
 import { supabase } from './supabase'
 
 export default function Portaria() {
-  // --- CONFIGURAÇÃO DE ACESSO ---
-  const SENHA_CORRETA = 'FESTA2026'
+  // --- CONFIGURAÇÃO DE ACESSO (Hash SHA-256 da senha) 
+  const HASH_SENHA_CORRETA = 'e1ef38cd1fce7d84b2efcda4c77c48efbc38aa4d693f4ebdb90f0ca96263f35c'
+  
   const [senhaInput, setSenhaInput] = useState('')
   const [autenticado, setAutenticado] = useState(false)
   const [erroSenha, setErroSenha] = useState(false)
@@ -28,10 +29,21 @@ export default function Portaria() {
     }
   }, [])
 
-  // Função para validar a senha da portaria
-  function verificarSenha(e) {
+  // Função para converter o texto digitado em Hash SHA-256
+  async function gerarHash(texto) {
+    const encoder = new TextEncoder()
+    const data = encoder.encode(texto)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  }
+
+  // Função para validar a senha da portaria comparando os hashes
+  async function verificarSenha(e) {
     e.preventDefault()
-    if (senhaInput === SENHA_CORRETA) {
+    const hashDigitado = await gerarHash(senhaInput)
+
+    if (hashDigitado === HASH_SENHA_CORRETA) {
       setAutenticado(true)
       setErroSenha(false)
     } else {
@@ -144,7 +156,7 @@ export default function Portaria() {
   }
 
   const cores = {
-    ok:       { bg:'#d1fae5', cor:'#065f46', borda:'#10b981', icone:'✅', msg:'ENTRADA LIBERADA' },
+    ok:        { bg:'#d1fae5', cor:'#065f46', borda:'#10b981', icone:'✅', msg:'ENTRADA LIBERADA' },
     ja_usado: { bg:'#fef3c7', cor:'#92400e', borda:'#f59e0b', icone:'⚠️', msg:'CONVITE JÁ UTILIZADO' },
     invalido: { bg:'#fee2e2', cor:'#991b1b', borda:'#ef4444', icone:'❌', msg:'CONVITE INVÁLIDO' }
   }
@@ -176,7 +188,7 @@ export default function Portaria() {
     )
   }
 
-  // --- TELA DO SCANNER ORIGINAL (Só renderiza se autenticado for true) ---
+  // --- TELA DO SCANNER ORIGINAL ---
   return (
     <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:20,background:'#fff8e1'}}>
       <div style={{background:'#fff',border:'2px solid #d97706',borderRadius:14,padding:28,width:'100%',maxWidth:420,textAlign:'center',boxShadow:'0 4px 20px rgba(0,0,0,.08)'}}>
