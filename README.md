@@ -1,10 +1,10 @@
-# 🌽 Sistema de Cadastro Festa Junina UniEnsino 2026
+#  Sistema de Cadastro Festa Junina UniEnsino 2026
 
 Sistema web de credenciamento e controle de acesso para a Festa Junina da UniEnsino 2026. Permite o cadastro de alunos e convidados, envio automático de QR Codes por e-mail e validação na portaria do evento.
 
 ---
 
-## 🔗 Links do Projeto
+#  Links do Projeto
 
 | Tela | URL |
 |---|---|
@@ -13,7 +13,7 @@ Sistema web de credenciamento e controle de acesso para a Festa Junina da UniEns
 
 ---
 
-## ✨ Funcionalidades
+#  Funcionalidades
 
 - **Cadastro de alunos** com validação de CPF (dígitos verificadores), e-mail e duplicidade
 - **Cadastro de convidados** vinculados ao aluno, sem limite de quantidade
@@ -26,7 +26,7 @@ Sistema web de credenciamento e controle de acesso para a Festa Junina da UniEns
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+#  Tecnologias Utilizadas
 
 | Camada | Tecnologia |
 |---|---|
@@ -41,7 +41,7 @@ Sistema web de credenciamento e controle de acesso para a Festa Junina da UniEns
 
 ---
 
-## 📁 Estrutura do Projeto
+#  Estrutura do Projeto
 
 ```
 festa-junina/
@@ -70,7 +70,7 @@ festa-junina/
 
 ---
 
-## ⚙️ Variáveis de Ambiente
+#  Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
@@ -87,7 +87,7 @@ BREVO_KEY=sua_chave_api_brevo
 
 ---
 
-## 🗄️ Estrutura do Banco de Dados
+#  Estrutura do Banco de Dados
 
 Tabela `convites` no Supabase:
 
@@ -106,7 +106,7 @@ Tabela `convites` no Supabase:
 
 ---
 
-## 🚀 Como Rodar Localmente
+# Como Rodar Localmente
 
 **Pré-requisitos:** Node.js 18+, npm
 
@@ -123,7 +123,7 @@ npm run build
 
 ---
 
-## 📧 Fluxo de E-mail
+# Fluxo de E-mail
 
 1. Aluno preenche o formulário → sistema gera um código único
 2. Supabase Edge Function `enviar-email` é chamada
@@ -132,18 +132,18 @@ npm run build
 
 ---
 
-## 🎪 Fluxo da Portaria
+# Fluxo da Portaria
 
 1. Operador acessa `/portaria` e insere a senha de acesso
 2. Lê o QR Code pela câmera ou digita o código manualmente
 3. Sistema consulta o banco e exibe o status:
-   - ✅ **Válido** — registra `usado_em` e libera entrada
-   - ⚠️ **Já utilizado** — exibe data e hora do uso anterior
-   - ❌ **Inválido** — código não encontrado
+   -  **Válido** — registra `usado_em` e libera entrada
+   -  **Já utilizado** — exibe data e hora do uso anterior
+   -  **Inválido** — código não encontrado
 
 ---
 
-## ☁️ Deploy no Vercel
+##  Deploy no Vercel
 
 O projeto é hospedado na [Vercel](https://vercel.com) com deploy automático a cada push na branch `main`.
 
@@ -169,6 +169,6 @@ VITE_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
 
 ---
 
-## 👥 Desenvolvido por
+#  Desenvolvido por
 
 Kevin e Emerson — Estagiários de TI · UniEnsino / Estácio · 2026
