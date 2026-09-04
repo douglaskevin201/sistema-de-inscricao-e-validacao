@@ -23,8 +23,19 @@ Sistema web de credenciamento e controle de acesso para a Festa Junina da UniEns
 - **Controle de uso único** — cada convite só pode ser validado uma vez
 - **Painel administrativo** com senha protegida, listagem, filtros, busca, cancelamento e reenvio de e-mails
 - **Exportação** da lista de inscritos em CSV e Excel (XLSX)
-
 ---
+
+# Segurança e publicação pública
+
+Este projeto deve ser publicado com cuidado e sem segredos no repositório.
+
+- Nunca commitar arquivos `.env` reais
+- Usar `.env.example` como referência para configuração local
+- A senha da portaria e a senha administrativa devem ser tratadas no backend, nunca no frontend
+- Dados pessoais como CPF, nome e e-mail devem respeitar boas práticas de privacidade
+- Chaves de API, tokens e senhas devem ficar apenas no ambiente do provedor (Supabase / Vercel / servidor de produção)
+
+------
 
 ## 🛠️ Tecnologias Utilizadas
 

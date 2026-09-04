@@ -3,13 +3,19 @@ import { Html5Qrcode } from 'html5-qrcode'
 import { supabase } from './supabase'
 
 export default function Portaria() {
-  // --- CONFIGURAÇÃO DE ACESSO (Hash SHA-256 da senha) 
-  const HASH_SENHA_CORRETA = 'e1ef38cd1fce7d84b2efcda4c77c48efbc38aa4d693f4ebdb90f0ca96263f35c'
-  
   const [senhaInput, setSenhaInput] = useState('')
   const [autenticado, setAutenticado] = useState(false)
   const [erroSenha, setErroSenha] = useState(false)
-  // ------------------------------
+
+  async function validarSenhaPortaria(senha) {
+    const { data, error } = await supabase.functions.invoke('validar-portaria', {
+      body: JSON.stringify({ senha }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+
+    if (error) throw error
+    return data?.ok === true
+  }
 
   const [codigo, setCodigo] = useState('')
   const [resultado, setResultado] = useState(null)
@@ -29,24 +35,20 @@ export default function Portaria() {
     }
   }, [])
 
-  // Função para converter o texto digitado em Hash SHA-256
-  async function gerarHash(texto) {
-    const encoder = new TextEncoder()
-    const data = encoder.encode(texto)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
-  }
-
-  // Função para validar a senha da portaria comparando os hashes
   async function verificarSenha(e) {
     e.preventDefault()
-    const hashDigitado = await gerarHash(senhaInput)
 
-    if (hashDigitado === HASH_SENHA_CORRETA) {
-      setAutenticado(true)
-      setErroSenha(false)
-    } else {
+    try {
+      const valido = await validarSenhaPortaria(senhaInput)
+      if (valido) {
+        setAutenticado(true)
+        setErroSenha(false)
+        setSenhaInput('')
+      } else {
+        setErroSenha(true)
+      }
+    } catch (error) {
+      console.error('Erro ao validar senha da portaria:', error)
       setErroSenha(true)
     }
   }
