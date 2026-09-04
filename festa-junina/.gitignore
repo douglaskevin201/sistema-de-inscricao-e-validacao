@@ -7,21 +7,48 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Dependências e build
+node_modules/
+dist/
+dist-ssr/
+.cache/
+coverage/
 *.local
 
-# Editor directories and files
-.vscode/*
+# Ambiente e segredos
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Editor e sistema
+.vscode/
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+Thumbs.db
 
+# Deploy / artefatos locais
+.vercel/
 .vercel
-.env*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.secret
+
+# Dados locais / exportações
+*.csv
+*.xlsx
+*.sql
+*.sqlite
+*.db
+uploads/
+storage/
+data/
