@@ -171,4 +171,4 @@ VITE_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
 
 #  Desenvolvido por
 
-Kevin e Emerson — Estagiários de TI · UniEnsino / Estácio · 2026
+Kevin e Emerson — Estagiários de TI · UniEnsino · 2026
