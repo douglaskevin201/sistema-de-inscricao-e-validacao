@@ -6,3 +6,13 @@
 .env.keys
 .env.local
 .env.*.local
+.env
+.env.*
+!.env.example
+
+# Secrets e artefatos locais
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
