@@ -15,6 +15,7 @@ pnpm-debug.log*
 .env.*
 !.env.example
 !.env.sample
+supabase/.temp/
 
 # Deploy / tool local
 .vercel/
